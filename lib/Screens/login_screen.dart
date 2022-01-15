@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:prime_video/Providers/UIProviders/custom_checkbox_provider.dart';
 import 'package:prime_video/Widgets/custom_spacer.dart';
+import 'package:prime_video/Widgets/primary_button.dart';
 import 'package:prime_video/Widgets/text_form_field.dart';
 import 'package:prime_video/prime_colors.dart';
 import 'package:provider/provider.dart';
@@ -48,6 +49,30 @@ class _LoginScreenState extends State<LoginScreen> {
 
   TextEditingController? _emailController;
   TextEditingController? _passwordController;
+
+  Future<void> _login() async {
+    print("First Validating Email");
+    if (validateEmail("Sarthak!gmail.com") == null) return;
+    print("The email was corect");
+  }
+
+  validateEmail(String value) {
+    String pattern =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regex = RegExp(pattern);
+    if (regex.hasMatch(value) == false) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Invalid Email'),
+          duration: Duration(seconds: 1),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.black,
+        ),
+      );
+      return;
+    }
+    return (!regex.hasMatch(value)) ? false : true;
+  }
 
   @override
   void initState() {
@@ -98,23 +123,16 @@ class _LoginScreenState extends State<LoginScreen> {
               textEditingController: _passwordController,
             ),
             buildShowPasswordWidget(),
-            TextButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(
-                  PrimeColors.textFieldBorderActiveColor,
-                ),
-              ),
-              onPressed: () {},
-              child: const Padding(
-                padding: EdgeInsets.symmetric(
-                  vertical: 3,
-                ),
-                child: Text(
-                  'Sign In',
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
+            buildPrimaryButton(() {
+              print("Logging the User In");
+              _login();
+            }),
+            buildHeightSizedBox(),
+            const Text(
+              'By Signing in, you agree to the Prime Video Terms of Use and license agreements which can be found on the PrimeVideo Catalogue.',
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 12,
               ),
             )
           ],
