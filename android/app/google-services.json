@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "761726327538",
+    "project_id": "prime-video-dd4d2",
+    "storage_bucket": "prime-video-dd4d2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:761726327538:android:bcce956fd8f9403877ce6b",
+        "android_client_info": {
+          "package_name": "com.sarthak.prime_video"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "761726327538-oh3kqph7leledvgcehltlo3mlaq4qv9e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXzIhe-kIjuAJjajGxNdtwhq9JoVNz4E0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "761726327538-oh3kqph7leledvgcehltlo3mlaq4qv9e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
