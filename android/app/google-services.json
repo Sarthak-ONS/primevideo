@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "761726327538-7vi0qsmnh1ogno1h4ko14i6gjvp7ded9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sarthak.prime_video",
+            "certificate_hash": "01ee2d42ec83c57dd3eb5c74008a3fe08f8edfc1"
+          }
+        },
+        {
           "client_id": "761726327538-oh3kqph7leledvgcehltlo3mlaq4qv9e.apps.googleusercontent.com",
           "client_type": 3
         }
