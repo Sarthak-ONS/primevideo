@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:prime_video/Providers/UIProviders/custom_checkbox_provider.dart';
 import 'package:prime_video/routes.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
+  //Provider.debugCheckInvalidValueType == null;
 }
 
 class MyApp extends StatelessWidget {
@@ -11,15 +14,22 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        fontFamily: 'PoppinsRegular',
+    return MultiProvider(
+      providers: [
+        ListenableProvider(
+          create: (_) => CheckBoxProvider(),
+        ),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          fontFamily: 'PoppinsRegular',
+        ),
+        routes: CustomRoutes.customRoutes,
+        initialRoute: '/',
       ),
-      routes: CustomRoutes.customRoutes,
-      initialRoute: '/',
     );
   }
 }
