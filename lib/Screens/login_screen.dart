@@ -109,6 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   buildHeightSizedBox(),
                   buildShowPasswordWidget(),
+                  buildForgotPassword(),
                   buildHeightSizedBox(),
                   buildPrimaryButton(() {
                     print("Logging the User In");
@@ -146,4 +147,34 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+
+  buildForgotPassword() => GestureDetector(
+        child: const Text(
+          'Forgot Password? ',
+          style: TextStyle(
+            color: Colors.lightBlue,
+            fontSize: 14,
+          ),
+        ),
+        onTap: () {
+          if (_emailController!.text.isEmpty ||
+              AuthInputsValidation.validateEmail(
+                      _emailController!.text, context) ==
+                  false) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Enter a Email'),
+                backgroundColor: Colors.black,
+                behavior: SnackBarBehavior.floating,
+                duration: Duration(seconds: 1),
+                dismissDirection: DismissDirection.horizontal,
+              ),
+            );
+            return;
+          }
+
+          FirebaseAuthApi()
+              .forgorPassword(email: _emailController!.text, context: context);
+        },
+      );
 }

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -64,6 +65,9 @@ class SendEmailVerificationMail {
       print(response.body);
       print(response.statusCode);
       return;
+    } on SocketException catch (e) {
+      print("Error From Email Send Method For reset");
+      print(e.message);
     } catch (e) {
       print(e);
     }

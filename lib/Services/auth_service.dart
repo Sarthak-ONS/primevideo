@@ -50,9 +50,13 @@ class FirebaseAuthApi {
   }
 
   //Forgot Password
-  Future forgorPassword() async {}
-
-  //Send Email Verification Link
-
-  Future verifyEmail() async {}
+  Future forgorPassword({String? email, BuildContext? context}) async {
+    try {
+      await _firebaseAuth.sendPasswordResetEmail(
+        email: email!,
+      );
+    } on FirebaseAuthException catch (e) {
+      CustomAuthExceptions().handleAuthExceptions(e.code, context!);
+    }
+  }
 }

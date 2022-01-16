@@ -30,7 +30,7 @@ class CustomAuthExceptions {
             "Your account is disabled to unusual activity. Please go to help section";
         break;
       default:
-        errorMessage = "An undefined Error happened.";
+        errorMessage = "Please try again later";
         print(code);
     }
 
