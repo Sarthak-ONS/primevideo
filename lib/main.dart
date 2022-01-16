@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:prime_video/Providers/BProviders/current_user_provider.dart';
 import 'package:prime_video/Providers/UIProviders/custom_checkbox_provider.dart';
 import 'package:prime_video/routes.dart';
 import 'package:provider/provider.dart';
@@ -7,6 +8,7 @@ import 'package:provider/provider.dart';
 void main() {
   //Firebase.initializeApp();
   WidgetsFlutterBinding.ensureInitialized();
+  Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -21,6 +23,9 @@ class MyApp extends StatelessWidget {
         ListenableProvider(
           create: (_) => CheckBoxProvider(),
         ),
+        Provider(
+          create: (_) => CurrentUser(),
+        )
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

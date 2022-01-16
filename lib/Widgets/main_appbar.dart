@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 buildMainAppBar({required bool createBackButton, callback}) => AppBar(
       leading: createBackButton == true
           ? IconButton(
-              icon: const Icon(Icons.arrow_back),
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              ),
               onPressed: callback,
             )
           : null,

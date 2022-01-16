@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:prime_video/Providers/UIProviders/custom_checkbox_provider.dart';
-import 'package:provider/provider.dart';
 
 import '../prime_colors.dart';
 
@@ -21,6 +19,8 @@ class CustomTextFiled extends StatelessWidget {
     return TextFormField(
       obscureText: obscure!,
       controller: textEditingController,
+      autofillHints:
+          hintText == "Enter Your Email" ? [AutofillHints.email] : [],
       style: const TextStyle(fontSize: 17),
       decoration: InputDecoration(
         fillColor: PrimeColors.textFieldColor,
