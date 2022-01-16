@@ -2,20 +2,20 @@ import 'package:flutter/material.dart';
 
 import '../prime_colors.dart';
 
-buildPrimaryButton(callBack) => TextButton(
+buildPrimaryButton(callBack, String title) => TextButton(
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all<Color>(
           PrimeColors.textFieldBorderActiveColor,
         ),
       ),
       onPressed: callBack,
-      child: const Padding(
-        padding: EdgeInsets.symmetric(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
           vertical: 3,
         ),
         child: Text(
-          'Sign In',
-          style: TextStyle(
+          title,
+          style: const TextStyle(
             color: Colors.white,
           ),
         ),

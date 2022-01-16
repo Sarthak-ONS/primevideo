@@ -1,11 +1,13 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:prime_video/Providers/UIProviders/custom_checkbox_provider.dart';
 import 'package:prime_video/routes.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+  //Firebase.initializeApp();
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
-  //Provider.debugCheckInvalidValueType == null;
 }
 
 class MyApp extends StatelessWidget {
