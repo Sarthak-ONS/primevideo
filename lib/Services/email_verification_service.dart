@@ -7,6 +7,8 @@ import 'package:http/http.dart' as http;
 import 'package:prime_video/Screens/verify_mail_screen.dart';
 import 'package:prime_video/routes.dart';
 
+import '../private_variable.dart';
+
 class SendEmailVerificationMail {
   static int? otp;
 
@@ -25,8 +27,6 @@ class SendEmailVerificationMail {
       String? message,
       String? subject,
       context}) async {
-    const serviceId = 'service_z7duvek';
-    const templateID = 'template_242ngld';
     generateOTP();
     final url = Uri.parse("https://api.emailjs.com/api/v1.0/email/send");
 
@@ -39,7 +39,7 @@ class SendEmailVerificationMail {
           'origin': 'http://localhost'
         },
         body: jsonEncode({
-          "user_id": "user_mlWvx9F4teSsP5qGLwZ0I",
+          "user_id": userID,
           'service_id': serviceId,
           'template_id': templateID,
           'template_params': {
