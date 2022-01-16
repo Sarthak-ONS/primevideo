@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:prime_video/Screens/home_screen.dart';
+import 'package:prime_video/Services/email_verification_service.dart';
 import 'package:prime_video/Widgets/custom_spacer.dart';
 import 'package:prime_video/Widgets/main_appbar.dart';
 import 'package:prime_video/Widgets/primary_button.dart';
 import 'package:prime_video/prime_colors.dart';
 import 'package:pinput/pin_put/pin_put.dart';
+import 'package:prime_video/routes.dart';
 
 class VerifyEmailScreen extends StatefulWidget {
   const VerifyEmailScreen(
@@ -81,6 +84,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                 ),
               ),
               buildHeightSizedBox(),
+              //TODO: Add a Resend Email Of OTP
               PinPut(
                 fieldsCount: 6,
                 controller: _otpController,
@@ -92,8 +96,13 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                 followingFieldDecoration: kboxDecoration,
                 onSubmit: (str) {
                   print("/////////");
-                  if (str == widget.otp.toString()) {
+                  if (str == SendEmailVerificationMail.otp.toString()) {
                     print("Email Is Verified");
+                    Navigator.of(context).push(
+                      createRoute(
+                        const HomeScreen(),
+                      ),
+                    );
                   }
                   print(str);
                 },
@@ -104,9 +113,15 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
               buildHeightSizedBox(height: 50),
               buildPrimaryButton(
                 () {
-                  if (_otpController!.text == widget.otp.toString()) {
+                  if (_otpController!.text ==
+                      SendEmailVerificationMail.otp.toString()) {
                     print("OTP is Verified");
                     //Go to Home Page
+                    Navigator.of(context).pushAndRemoveUntil(
+                        createRoute(
+                          const HomeScreen(),
+                        ),
+                        ModalRoute.withName(""));
                   }
                 },
                 'Verify OTP',
@@ -116,24 +131,5 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
         ),
       ),
     );
-  }
-
-  void _showSnackBar(String pin, BuildContext context) {
-    final snackBar = SnackBar(
-      duration: const Duration(seconds: 3),
-      content: Container(
-        height: 80.0,
-        child: Center(
-          child: Text(
-            'Pin Submitted. Value: $pin',
-            style: const TextStyle(fontSize: 25.0),
-          ),
-        ),
-      ),
-      backgroundColor: Colors.deepPurpleAccent,
-    );
-    Scaffold.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(snackBar);
   }
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:prime_video/Auth_Validator/auth_validation.dart';
 import 'package:prime_video/Providers/UIProviders/custom_checkbox_provider.dart';
 import 'package:prime_video/Services/auth_service.dart';
-import 'package:prime_video/Services/email_verification_service.dart';
 import 'package:prime_video/Widgets/auth_heading.dart';
 import 'package:prime_video/Widgets/custom_spacer.dart';
 import 'package:prime_video/Widgets/main_appbar.dart';
@@ -10,8 +9,6 @@ import 'package:prime_video/Widgets/primary_button.dart';
 import 'package:prime_video/Widgets/text_form_field.dart';
 import 'package:prime_video/prime_colors.dart';
 import 'package:provider/provider.dart';
-
-import '../routes.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({Key? key}) : super(key: key);

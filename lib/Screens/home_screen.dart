@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:prime_video/Widgets/main_appbar.dart';
+import 'package:prime_video/prime_colors.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -12,7 +12,18 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildMainAppBar(createBackButton: false),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: PrimeColors.primaryColor,
+        elevation: 0,
+        centerTitle: true,
+        title: Image.asset(
+          "Assets/Images/ogo.png",
+          height: 140,
+          width: 140,
+        ),
+      ),
+      backgroundColor: PrimeColors.primaryColor,
     );
   }
 }

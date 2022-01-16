@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:prime_video/Auth_Validator/auth_validation.dart';
 import 'package:prime_video/Providers/UIProviders/custom_checkbox_provider.dart';
 import 'package:prime_video/Screens/signup_screen.dart';
+import 'package:prime_video/Services/auth_service.dart';
 import 'package:prime_video/Widgets/auth_heading.dart';
 import 'package:prime_video/Widgets/custom_spacer.dart';
 import 'package:prime_video/Widgets/main_appbar.dart';
@@ -10,7 +11,6 @@ import 'package:prime_video/Widgets/text_form_field.dart';
 import 'package:prime_video/prime_colors.dart';
 import 'package:provider/provider.dart';
 
-import '../global_variable.dart';
 import '../routes.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -51,13 +51,17 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _login() async {
     print("First Validating Email");
-    if (AuthInputsValidation.validateEmail("Sarthak!gmail.com", context) ==
+    if (AuthInputsValidation.validateEmail(_emailController!.text, context) ==
             null ||
         AuthInputsValidation.validatePassword(
                 _passwordController!.text, context) ==
             null) return;
 
     print("The email was corect");
+    FirebaseAuthApi().signIn(
+        email: _emailController!.text,
+        password: _passwordController!.text,
+        context: context);
   }
 
   bool isSignup = false;
