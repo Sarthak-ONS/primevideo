@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:prime_video/Providers/BProviders/current_user_provider.dart';
+import 'package:prime_video/Providers/BProviders/trending_provider.dart';
 import 'package:prime_video/Providers/UIProviders/bottom_navbar_provider.dart';
 import 'package:prime_video/Providers/UIProviders/custom_checkbox_provider.dart';
 import 'package:prime_video/routes.dart';
@@ -29,6 +30,9 @@ class MyApp extends StatelessWidget {
         ),
         ListenableProvider(
           create: (_) => BottomNavBarProvider(),
+        ),
+        ListenableProvider(
+          create: (_) => TrendingMovieProvider(),
         )
       ],
       child: MaterialApp(

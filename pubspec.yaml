@@ -31,6 +31,10 @@ dependencies:
   cloud_firestore: ^3.1.6
   image_picker:
   flutter_svg: ^1.0.1
+  carousel_slider: ^4.0.0
+  cached_network_image: ^3.2.0
+  shimmer: ^2.0.0
+  tmdb_api: ^2.0.0
   pinput: ^1.2.0
   http: ^0.13.4
 

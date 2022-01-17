@@ -52,6 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
         selectedLabelStyle: TextStyle(color: PrimeColors.primaryBlueColor),
         type: BottomNavigationBarType.fixed,
         showUnselectedLabels: false,
+        showSelectedLabels: false,
         currentIndex: Provider.of<BottomNavBarProvider>(context).currentIndex,
         elevation: 0,
         onTap: _onTapNavBarItem,
@@ -73,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return BottomNavigationBarItem(
       icon: Image.asset(
         'Assets/Images/$imageUrl.png',
-        color: Colors.white,
+        color: PrimeColors.primaryBlueColor,
         height: 25,
       ),
       label: title,
