@@ -82,8 +82,9 @@ class _SignupScreenState extends State<SignupScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              buildAuthHeading('Sign Up'),
-              buildHeightSizedBox(height: 45),
+              buildHeightSizedBox(height: 25),
+              buildAuthHeading('Create an Account'),
+              buildHeightSizedBox(height: 35),
               CustomTextFiled(
                 hintText: 'Enter Your Name',
                 textEditingController: _nameController,

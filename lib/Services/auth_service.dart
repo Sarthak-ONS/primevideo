@@ -59,4 +59,14 @@ class FirebaseAuthApi {
       CustomAuthExceptions().handleAuthExceptions(e.code, context!);
     }
   }
+
+//Signout
+  Future signout() async {
+    try {
+      _firebaseAuth.signOut();
+    } catch (e) {
+      print("Error During Singout");
+      print(e);
+    }
+  }
 }

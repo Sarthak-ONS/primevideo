@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:prime_video/Providers/BProviders/current_user_provider.dart';
+import 'package:prime_video/Providers/UIProviders/bottom_navbar_provider.dart';
 import 'package:prime_video/Providers/UIProviders/custom_checkbox_provider.dart';
 import 'package:prime_video/routes.dart';
 import 'package:provider/provider.dart';
@@ -25,6 +26,9 @@ class MyApp extends StatelessWidget {
         ),
         Provider(
           create: (_) => CurrentUser(),
+        ),
+        ListenableProvider(
+          create: (_) => BottomNavBarProvider(),
         )
       ],
       child: MaterialApp(

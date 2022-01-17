@@ -125,22 +125,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ],
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: TextButton(
-                  child: const Text(
-                    'Sign Up?',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context)
-                        .push(createRoute(const SignupScreen()));
-                  },
-                ),
-              )
+              buildPrimaryButton(() {
+                Navigator.of(context).push(createRoute(const SignupScreen()));
+                ;
+              }, 'Create an Account')
             ],
           ),
         ),
