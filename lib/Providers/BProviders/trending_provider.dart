@@ -5,4 +5,12 @@ class TrendingMovieProvider extends ChangeNotifier {
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
 
   get trendingMedia => _firebaseFirestore.collection('Trending').get();
+
+  get topRatedMedia => _firebaseFirestore.collection('Top Rated').get();
+
+  get recommendedMedia => _firebaseFirestore.collection('Recommended').get();
+
+  get upcomingMedia => _firebaseFirestore.collection('Upcoming').get();
+
+  get nowPlaying => _firebaseFirestore.collection('Now Playing').get();
 }

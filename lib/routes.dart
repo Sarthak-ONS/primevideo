@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:prime_video/Screens/home_screen.dart';
 import 'package:prime_video/Screens/login_screen.dart';
 import 'package:prime_video/Screens/signup_screen.dart';
 
 class CustomRoutes {
   static var customRoutes = {
     '/': (context) => const LoginScreen(),
-    'signup': (context) => const SignupScreen()
+    'signup': (context) => const SignupScreen(),
+    'home': (context) => const HomeScreen()
   };
 }
 
