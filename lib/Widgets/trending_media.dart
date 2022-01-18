@@ -2,7 +2,9 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:prime_video/Providers/BProviders/trending_provider.dart';
+import 'package:prime_video/Screens/movie_description_page.dart';
 import 'package:prime_video/prime_colors.dart';
+import 'package:prime_video/routes.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -36,13 +38,30 @@ class _TrendingMoviesState extends State<TrendingMovies> {
               itemCount: snapshot.data!.docs.length,
               options: CarouselOptions(
                   viewportFraction: 1,
-                  autoPlay: true,
+                  autoPlay: false,
                   autoPlayInterval: const Duration(seconds: 2),
                   enlargeCenterPage: true,
                   autoPlayCurve: Curves.decelerate),
               itemBuilder: (context, index, realIndex) {
                 return GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    // print(snapshot.data!.docs[index].get("backdrop_path"));
+                    // print(snapshot.data!.docs[index].get("id"));
+                    // print(snapshot.data!.docs[index].get("name"));
+                    // print(snapshot.data!.docs[index].get("overview"));
+                    Navigator.of(context).push(
+                      createRoute(
+                        MovieDescriptionScreen(
+                          backdrop_poster:
+                              snapshot.data!.docs[index].get("backdrop_path"),
+                          movieID: snapshot.data!.docs[index].get("id"),
+                          movie_name: snapshot.data!.docs[index].get("name"),
+                          description:
+                              snapshot.data!.docs[index].get("overview"),
+                        ),
+                      ),
+                    );
+                  },
                   child: Container(
                     height: 250,
                     decoration: BoxDecoration(
