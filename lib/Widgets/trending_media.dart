@@ -17,7 +17,7 @@ class _TrendingMoviesState extends State<TrendingMovies> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: Provider.of<TrendingMovieProvider>(context).trendingMedia,
+      future: Provider.of<MovieProvider>(context).trendingMedia,
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         return ListView.builder(
           itemBuilder: (context, index) {

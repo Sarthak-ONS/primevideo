@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
           create: (_) => BottomNavBarProvider(),
         ),
         ListenableProvider(
-          create: (_) => TrendingMovieProvider(),
+          create: (_) => MovieProvider(),
         )
       ],
       child: MaterialApp(
