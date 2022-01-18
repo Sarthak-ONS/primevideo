@@ -7,6 +7,8 @@ import 'package:prime_video/Widgets/trending_media.dart';
 import 'package:prime_video/prime_colors.dart';
 import 'package:tmdb_api/tmdb_api.dart';
 
+import '../../private_variable.dart';
+
 class HomeTab extends StatefulWidget {
   const HomeTab({Key? key}) : super(key: key);
 
@@ -15,14 +17,9 @@ class HomeTab extends StatefulWidget {
 }
 
 class _HomeTabState extends State<HomeTab> {
-  final String _apiKeys = "f4454d10ac4f72d8ce4caa9f855bc48a";
-
-  final String token =
-      "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmNDQ1NGQxMGFjNGY3MmQ4Y2U0Y2FhOWY4NTViYzQ4YSIsInN1YiI6IjYxZTU1MjQ0Y2FlNjMyMDA5ZWIyN2FiYSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.FZePPr0qmqB4gQ_t5C_1ZJDe29PZGnmKDiqIwuSQ_DA";
-
   Future loadMovies() async {
     TMDB _tmdb = TMDB(
-      ApiKeys(_apiKeys, token),
+      ApiKeys(apiKeys, token),
       logConfig: ConfigLogger(
         showLogs: true,
         showErrorLogs: true,
@@ -78,10 +75,19 @@ class _HomeTabState extends State<HomeTab> {
           vertical: 5,
           horizontal: 5,
         ),
-        children: const [
-          SizedBox(
+        children: [
+          //Trending Container
+          const SizedBox(
             height: 210,
             child: TrendingMovies(),
+          ),
+          //TODO: For Continue Watching
+
+          SizedBox(
+            height: 150,
+            child: Container(
+              color: Colors.red,
+            ),
           ),
         ],
       ),
