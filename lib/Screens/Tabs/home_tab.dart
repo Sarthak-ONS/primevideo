@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:prime_video/Models/movie_model.dart';
 import 'package:prime_video/Widgets/custom_spacer.dart';

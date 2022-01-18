@@ -21,14 +21,29 @@ class TopRatedMedia extends StatelessWidget {
             itemCount: snapshot.data!.docs.length,
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
-              return Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5.0),
-                    color: PrimeColors.primaryColor),
-                height: 150,
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                child: Image.network(
-                  snapshot.data!.docs[index].get("poster_path"),
+              return GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(
+                    createRoute(
+                      MovieDescriptionScreen(
+                        backdrop_poster:
+                            snapshot.data!.docs[index].get("backdrop_path"),
+                        movieID: snapshot.data!.docs[index].get("id"),
+                        movie_name: snapshot.data!.docs[index].get("name"),
+                        description: snapshot.data!.docs[index].get("overview"),
+                      ),
+                    ),
+                  );
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5.0),
+                      color: PrimeColors.primaryColor),
+                  height: 150,
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  child: Image.network(
+                    snapshot.data!.docs[index].get("poster_path"),
+                  ),
                 ),
               );
             },
@@ -56,7 +71,17 @@ class RecommendedMedia extends StatelessWidget {
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: () {
-                  print(snapshot.data!.docs[index].get("id"));
+                  Navigator.of(context).push(
+                    createRoute(
+                      MovieDescriptionScreen(
+                        backdrop_poster:
+                            snapshot.data!.docs[index].get("backdrop_path"),
+                        movieID: snapshot.data!.docs[index].get("id"),
+                        movie_name: snapshot.data!.docs[index].get("name"),
+                        description: snapshot.data!.docs[index].get("overview"),
+                      ),
+                    ),
+                  );
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -92,14 +117,29 @@ class UpcomingMedia extends StatelessWidget {
             itemCount: snapshot.data!.docs.length,
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
-              return Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5.0),
-                    color: PrimeColors.primaryColor),
-                height: 150,
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                child: Image.network(
-                  snapshot.data!.docs[index].get("poster_path"),
+              return GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(
+                    createRoute(
+                      MovieDescriptionScreen(
+                        backdrop_poster:
+                            snapshot.data!.docs[index].get("backdrop_path"),
+                        movieID: snapshot.data!.docs[index].get("id"),
+                        movie_name: snapshot.data!.docs[index].get("name"),
+                        description: snapshot.data!.docs[index].get("overview"),
+                      ),
+                    ),
+                  );
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5.0),
+                      color: PrimeColors.primaryColor),
+                  height: 150,
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  child: Image.network(
+                    snapshot.data!.docs[index].get("poster_path"),
+                  ),
                 ),
               );
             },
@@ -129,7 +169,13 @@ class NowPlaying extends StatelessWidget {
                 onTap: () {
                   Navigator.of(context).push(
                     createRoute(
-                      const MovieDescriptionScreen(),
+                      MovieDescriptionScreen(
+                        backdrop_poster:
+                            snapshot.data!.docs[index].get("backdrop_path"),
+                        movieID: snapshot.data!.docs[index].get("id"),
+                        movie_name: snapshot.data!.docs[index].get("name"),
+                        description: snapshot.data!.docs[index].get("overview"),
+                      ),
                     ),
                   );
                 },

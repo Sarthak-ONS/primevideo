@@ -13,4 +13,11 @@ class MovieProvider extends ChangeNotifier {
   get upcomingMedia => _firebaseFirestore.collection('Upcoming').get();
 
   get nowPlaying => _firebaseFirestore.collection('Now Playing').get();
+
+  get singleMovieProvider =>
+      _firebaseFirestore.collection('AllMovies').doc().get();
+
+  returnSingleMovieProviderFuture(String id) {
+    return _firebaseFirestore.collection('AllMovies').doc(id).get();
+  }
 }

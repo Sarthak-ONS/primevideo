@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../prime_colors.dart';
 
-buildPrimaryButton(callBack, String title) => TextButton(
+buildPrimaryButton(callBack, String title,
+        {Color? color, bool? isWatchNow = false}) =>
+    TextButton(
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all<Color>(
-          PrimeColors.textFieldBorderActiveColor,
+          color ?? PrimeColors.textFieldBorderActiveColor,
         ),
       ),
       onPressed: callBack,
@@ -13,11 +15,26 @@ buildPrimaryButton(callBack, String title) => TextButton(
         padding: const EdgeInsets.symmetric(
           vertical: 3,
         ),
-        child: Text(
-          title,
-          style: const TextStyle(
-            color: Colors.white,
-          ),
-        ),
+        child: isWatchNow!
+            ? Row(
+                children: [
+                  Icon(
+                    Icons.play_arrow,
+                    color: Colors.white,
+                  ),
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                    ),
+                  )
+                ],
+              )
+            : Text(
+                title,
+                style: const TextStyle(
+                  color: Colors.white,
+                ),
+              ),
       ),
     );
