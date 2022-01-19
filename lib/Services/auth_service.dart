@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:prime_video/Providers/BProviders/current_user_provider.dart';
 import 'package:prime_video/Screens/home_screen.dart';
 import 'package:prime_video/Services/auth_exceptions.dart';
 import 'package:prime_video/Services/email_verification_service.dart';
 import 'package:prime_video/routes.dart';
+import 'package:provider/provider.dart';
 
 class FirebaseAuthApi {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -58,6 +60,16 @@ class FirebaseAuthApi {
     } on FirebaseAuthException catch (e) {
       CustomAuthExceptions().handleAuthExceptions(e.code, context!);
     }
+  }
+
+  Future autoLoginChangeDetials(context) async {
+    Provider.of<CurrentUserProvider>(context).changeUserDetails(
+      _firebaseAuth.currentUser!.email!,
+      _firebaseAuth.currentUser!.displayName!,
+      _firebaseAuth.currentUser!.photoURL == null
+          ? ""
+          : _firebaseAuth.currentUser!.photoURL!,
+    );
   }
 
 //Signout

@@ -7,14 +7,14 @@ import 'package:prime_video/Providers/UIProviders/bottom_navbar_provider.dart';
 import 'package:prime_video/Providers/UIProviders/custom_checkbox_provider.dart';
 import 'package:prime_video/Screens/home_screen.dart';
 import 'package:prime_video/Screens/login_screen.dart';
-import 'package:prime_video/routes.dart';
+import 'package:prime_video/Services/auth_service.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   //Firebase.initializeApp();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 // class App extends StatelessWidget {
@@ -56,8 +56,8 @@ class MyApp extends StatelessWidget {
         ListenableProvider(
           create: (_) => CheckBoxProvider(),
         ),
-        Provider(
-          create: (_) => CurrentUser(),
+        ChangeNotifierProvider(
+          create: (_) => CurrentUserProvider(),
         ),
         ListenableProvider(
           create: (_) => BottomNavBarProvider(),

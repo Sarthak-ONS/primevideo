@@ -4,6 +4,7 @@ import 'package:prime_video/Screens/Tabs/downloads_tab.dart';
 import 'package:prime_video/Screens/Tabs/home_tab.dart';
 import 'package:prime_video/Screens/Tabs/search_tab.dart';
 import 'package:prime_video/Screens/Tabs/user_profile.dart';
+import 'package:prime_video/Services/auth_service.dart';
 import 'package:prime_video/prime_colors.dart';
 import 'package:provider/provider.dart';
 
@@ -28,6 +29,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
+  void initState() {
+    // FirebaseAuthApi().autoLoginChangeDetials(context);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     print("Widget is not Rebuilding");
     return Scaffold(
@@ -41,6 +48,17 @@ class _HomeScreenState extends State<HomeScreen> {
           height: 100,
           width: 100,
         ),
+        actions: [
+          Provider.of<BottomNavBarProvider>(context).currentIndex == 3
+              ? IconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.settings,
+                    color: Colors.white,
+                  ),
+                )
+              : Container(),
+        ],
       ),
       backgroundColor: PrimeColors.primaryColor,
       bottomNavigationBar: BottomNavigationBar(
