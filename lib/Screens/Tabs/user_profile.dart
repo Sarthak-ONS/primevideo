@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prime_video/prime_colors.dart';
 
 class UserProfile extends StatefulWidget {
   const UserProfile({Key? key}) : super(key: key);
@@ -10,8 +11,9 @@ class UserProfile extends StatefulWidget {
 class _UserProfileState extends State<UserProfile> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(
+    return Scaffold(
+      backgroundColor: PrimeColors.primaryColor,
+      body: Center(
         child: Text('Home'),
       ),
     );

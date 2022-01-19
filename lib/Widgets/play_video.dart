@@ -23,6 +23,7 @@ class _PlayVideoForMoviesState extends State<PlayVideoForMovies> {
   @override
   void initState() {
     super.initState();
+
     chewieController = ChewieController(
       videoPlayerController: videoPlayerController,
       autoInitialize: true,
@@ -43,6 +44,7 @@ class _PlayVideoForMoviesState extends State<PlayVideoForMovies> {
       ),
       autoPlay: true,
       allowFullScreen: true,
+
       deviceOrientationsAfterFullScreen: [
         DeviceOrientation.landscapeRight,
         DeviceOrientation.landscapeLeft,
