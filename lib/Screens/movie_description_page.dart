@@ -63,30 +63,29 @@ class _MovieDescriptionScreenState extends State<MovieDescriptionScreen> {
 
   List? genreList = [];
 
+  bool? isWatchListed;
+
+  checkIdMovieIsAlreadyWatchListed() async {
+    print(widget.movieID);
+    final reult = await FirebaseFirestoreApi()
+        .checkifMovieisAlreadyWatchListed(widget.movieID.toString());
+    isWatchListed = reult;
+    print(reult);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    checkIdMovieIsAlreadyWatchListed();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            await getMovieCompleteData();
-            await FirebaseFirestore.instance
-                .collection('AllMovies')
-                .doc(widget.movieID.toString())
-                .set(
-              {
-                "adult": singleMovieModel!.adult,
-                "belongs_to_collection": singleMovieModel!.belongsToCollection,
-                "release_date": singleMovieModel!.releaseDate,
-                "duration": singleMovieModel!.runtime,
-                "ratings": singleMovieModel!.voteAverage,
-                "genre": [...genreList!],
-                "original_title": singleMovieModel!.originalTitle,
-                "original_language": singleMovieModel!.originalLanguage,
-                "tagline": singleMovieModel!.tagline,
-              },
-            ).then((value) => print("Done"));
-          },
+          onPressed: () async {},
         ),
         backgroundColor: PrimeColors.primaryColor,
         body: Stack(
@@ -179,17 +178,22 @@ class _MovieDescriptionScreenState extends State<MovieDescriptionScreen> {
                                   callback: () {},
                                 ),
                                 MovieDescriptionControlWidget(
-                                  icons: Icons.watch_later_outlined,
-                                  title: 'Watchlist',
-                                  callback: () {
-                                    // addthisMovietoWatchList(
-                                    //   adult: snapshot.data!.get("adult"),
-                                    //   backdropPath: widget.backdrop_poster,
-                                    //   movieId: widget.movieID.toString(),
-                                    //   title: widget.movie_name,
-                                    // );
-
-                                    FirebaseFirestoreApi().addMovietoWatchList(
+                                  icons: isWatchListed!
+                                      ? Icons.done_all_outlined
+                                      : Icons.watch_later_outlined,
+                                  title: isWatchListed!
+                                      ? "WatchListed"
+                                      : 'Watchlist',
+                                  bordercolor: isWatchListed!
+                                      ? PrimeColors.primaryBlueColor
+                                      : Colors.grey,
+                                  iconColor: isWatchListed!
+                                      ? Colors.white
+                                      : Colors.white,
+                                  callback: () async {
+                                    if (isWatchListed!) return;
+                                    await FirebaseFirestoreApi()
+                                        .addMovietoWatchList(
                                       widget.movieID.toString(),
                                       widget.movie_name,
                                       widget.backdrop_poster,
@@ -198,6 +202,8 @@ class _MovieDescriptionScreenState extends State<MovieDescriptionScreen> {
                                       snapshot.data!.get("release_date"),
                                       snapshot.data!.get("duration").toString(),
                                     );
+                                    checkIdMovieIsAlreadyWatchListed();
+                                    setState(() {});
                                   },
                                 ),
                                 MovieDescriptionControlWidget(
@@ -351,16 +357,20 @@ Future addthisMovietoWatchList({
 }
 
 class MovieDescriptionControlWidget extends StatelessWidget {
-  const MovieDescriptionControlWidget(
-      {Key? key,
-      required this.icons,
-      required this.title,
-      required this.callback})
-      : super(key: key);
+  const MovieDescriptionControlWidget({
+    Key? key,
+    required this.icons,
+    required this.title,
+    required this.callback,
+    this.bordercolor = Colors.grey,
+    this.iconColor = Colors.grey,
+  }) : super(key: key);
 
   final IconData icons;
   final String title;
-  final callback;
+  final Function callback;
+  final Color iconColor;
+  final Color bordercolor;
 
   @override
   Widget build(BuildContext context) {
@@ -372,14 +382,14 @@ class MovieDescriptionControlWidget extends StatelessWidget {
           },
           child: CircleAvatar(
             radius: 21,
-            backgroundColor: Colors.grey,
+            backgroundColor: bordercolor,
             child: CircleAvatar(
               backgroundColor: PrimeColors.primaryColor,
               radius: 20,
               child: Icon(
                 icons,
                 size: 25,
-                color: Colors.grey,
+                color: iconColor,
               ),
             ),
           ),
@@ -398,3 +408,19 @@ class Boxes {
   static Box<HiveMovieModel> getWatchListBox() =>
       Hive.box<HiveMovieModel>('hiveMovieModelWatchlist');
 }
+//  await FirebaseFirestore.instance
+//                 .collection('AllMovies')
+//                 .doc(widget.movieID.toString())
+//                 .set(
+//               {
+//                 "adult": singleMovieModel!.adult,
+//                 "belongs_to_collection": singleMovieModel!.belongsToCollection,
+//                 "release_date": singleMovieModel!.releaseDate,
+//                 "duration": singleMovieModel!.runtime,
+//                 "ratings": singleMovieModel!.voteAverage,
+//                 "genre": [...genreList!],
+//                 "original_title": singleMovieModel!.originalTitle,
+//                 "original_language": singleMovieModel!.originalLanguage,
+//                 "tagline": singleMovieModel!.tagline,
+//               },
+//             ).then((value) => print("Done"));

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:prime_video/Providers/BProviders/trending_provider.dart';
 import 'package:prime_video/Screens/movie_description_page.dart';
+import 'package:prime_video/Services/firestore_service.dart';
 import 'package:prime_video/Widgets/custom_spacer.dart';
 import 'package:prime_video/prime_colors.dart';
 import 'package:prime_video/routes.dart';
@@ -80,15 +81,27 @@ class _UserProfileState extends State<UserProfile> {
                   child: FutureBuilder(
                     future: Provider.of<MovieProvider>(context)
                         .watchListMovieProvider,
-                    builder:
-                        (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(
                           child: CircularProgressIndicator(),
                         );
                       }
-                      final tempSnap =
-                          snapshot.data!.get("listOfMoviesForWatchList");
+
+                      if (snapshot.data!.docs.isEmpty) {
+                        return const Center(
+                          child: Text(
+                            'Add to Watchlist!. WatchList is Empty!!',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        );
+                      }
+
+                      final tempSnap = snapshot.data!.docs;
                       return ListView.builder(
                         itemCount: tempSnap.length,
                         itemBuilder: (context, index) => GestureDetector(
@@ -103,6 +116,13 @@ class _UserProfileState extends State<UserProfile> {
                               ),
                             ),
                           ),
+                          onLongPress: () async {
+                            print("Removing Value From watchlist");
+                            print(tempSnap[index]['docID']);
+                            await FirebaseFirestoreApi().removeFromwatchList(
+                              tempSnap[index]['docID'],
+                            );
+                          },
                           child: Container(
                             decoration: BoxDecoration(
                                 color: PrimeColors.primaryColor,

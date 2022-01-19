@@ -27,5 +27,6 @@ class MovieProvider extends ChangeNotifier {
   get watchListMovieProvider => _firebaseFirestore
       .collection('Users')
       .doc(_firebaseAuth.currentUser!.uid)
+      .collection('Watchlist')
       .get();
 }

@@ -32,8 +32,6 @@ class FirebaseFirestoreApi {
           "email": _firebaseAuth.currentUser!.email,
           "photoUrl": _firebaseAuth.currentUser!.photoURL,
           "isUserVerified": true,
-          "listOfMoviesForWatchList": [],
-          "listofMoviesForContinueWatching": [],
         },
       ).then((value) => print("Successfully Created user Profile"));
     } catch (e) {
@@ -46,20 +44,28 @@ class FirebaseFirestoreApi {
       String backdroppath, String overview, String duration, String date,
       {String? tagline = ""}) async {
     try {
-      _firebaseFirestore.doc(_firebaseAuth.currentUser!.uid).update({
-        "listOfMoviesForWatchList": FieldValue.arrayUnion([
-          {
-            "id": movieID,
-            "name": name,
-            "poster_path": posterpath,
-            "backdrop_path": backdroppath,
-            "overview": overview,
-            "tagline": tagline,
-            "duration": duration,
-            "release_date": date
-          },
-        ]),
-      }).then((value) => print("Added to watch list"));
+      DocumentReference ref = await _firebaseFirestore
+          .doc(_firebaseAuth.currentUser!.uid)
+          .collection('Watchlist')
+          .add({
+        "id": movieID,
+        "name": name,
+        "poster_path": posterpath,
+        "backdrop_path": backdroppath,
+        "overview": overview,
+        "tagline": tagline,
+        "duration": duration,
+        "release_date": date,
+        "docID": ""
+      });
+
+      _firebaseFirestore
+          .doc(_firebaseAuth.currentUser!.uid)
+          .collection('Watchlist')
+          .doc(ref.id)
+          .update({"docID": ref.id}).then(
+        (value) => print("Successfulyy added and updated DOC ID"),
+      );
     } catch (e) {
       print("Error adding movie to watchlist");
       print(e);
@@ -95,27 +101,37 @@ class FirebaseFirestoreApi {
     }
   }
 
-  Future removeFromwatchList(
-    String movieID,
-    String name,
-    String posterpath,
-    String backdroppath,
-    String overview,
-    String tagline,
-  ) async {
-    _firebaseFirestore.doc(_firebaseAuth.currentUser!.uid).update({
-      "listOfMoviesForWatchList": FieldValue.arrayRemove(
-        [
-          {
-            "id": movieID,
-            "name": name,
-            "poster_path": posterpath,
-            "backdrop_path": backdroppath,
-            "overview": overview,
-            "tagline": tagline,
-          },
-        ],
-      ),
-    });
+  Future removeFromwatchList(String docID) async {
+    print(docID);
+    try {
+      _firebaseFirestore
+          .doc(_firebaseAuth.currentUser!.uid)
+          .collection('Watchlist')
+          .doc(docID)
+          .delete()
+          .then((value) => print("Scuuessfuly deleted Movie From watchlist"));
+    } catch (e) {
+      print("Eror Deleting From watchlist");
+      print(e);
+    }
+  }
+
+  Future checkifMovieisAlreadyWatchListed(String movieID) async {
+    try {
+      final isWatchListed = await _firebaseFirestore
+          .doc(_firebaseAuth.currentUser!.uid)
+          .collection('Watchlist')
+          .where("id", isEqualTo: movieID)
+          .get();
+      if (isWatchListed.docs.isNotEmpty) {
+        print("Movie is watchlisted");
+        return true;
+      } else {
+        print("Movie is not watchlisted");
+        return false;
+      }
+    } catch (e) {
+      print("Eror From checkifMovieisAlreadyWatchListed");
+    }
   }
 }
