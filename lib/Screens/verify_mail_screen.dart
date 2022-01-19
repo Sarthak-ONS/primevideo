@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:prime_video/Screens/home_screen.dart';
 import 'package:prime_video/Services/email_verification_service.dart';
+import 'package:prime_video/Services/firestore_service.dart';
 import 'package:prime_video/Widgets/custom_spacer.dart';
 import 'package:prime_video/Widgets/main_appbar.dart';
 import 'package:prime_video/Widgets/primary_button.dart';
@@ -112,10 +114,13 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
               ),
               buildHeightSizedBox(height: 50),
               buildPrimaryButton(
-                () {
+                () async {
                   if (_otpController!.text ==
                       SendEmailVerificationMail.otp.toString()) {
                     print("OTP is Verified");
+                    await FirebaseFirestoreApi().createProfileInDatabase(
+                        FirebaseAuth.instance.currentUser!.uid);
+
                     //Go to Home Page
                     Navigator.of(context).pushAndRemoveUntil(
                         createRoute(

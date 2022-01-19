@@ -23,9 +23,6 @@ class FirebaseAuthApi {
       SendEmailVerificationMail()
           .sendEmailVerificaionMail(name: name, email: email, context: context);
 
-      await FirebaseFirestoreApi()
-          .createProfileInDatabase(userCredential.user!.uid);
-
       ///
       print(userCredential.user!.email);
     } on FirebaseAuthException catch (e) {

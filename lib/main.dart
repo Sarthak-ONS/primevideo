@@ -5,6 +5,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:prime_video/Models/movie_model_hive.dart';
+import 'package:prime_video/Screens/verify_mail_screen.dart';
+import 'package:prime_video/Services/email_verification_service.dart';
+import 'package:prime_video/Services/firestore_service.dart';
 import 'package:provider/provider.dart';
 import 'package:path_provider/path_provider.dart' as pathprovider;
 
@@ -97,9 +100,8 @@ class MyApp extends StatelessWidget {
               return const Center(
                 child: CircularProgressIndicator(),
               );
-            } else {
-              return const HomeScreen();
             }
+            return const HomeScreen();
           },
         ),
       ),
