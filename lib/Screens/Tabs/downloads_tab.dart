@@ -10,10 +10,8 @@ class DownloadsTab extends StatefulWidget {
 class _DownloadsTabState extends State<DownloadsTab> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: Text('Downloads'),
-      ),
+    return const Center(
+      child: Text('Downloads'),
     );
   }
 }

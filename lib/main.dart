@@ -1,19 +1,30 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:prime_video/Models/movie_model_hive.dart';
+import 'package:provider/provider.dart';
+import 'package:path_provider/path_provider.dart' as pathprovider;
+
 import 'package:prime_video/Providers/BProviders/current_user_provider.dart';
 import 'package:prime_video/Providers/BProviders/trending_provider.dart';
 import 'package:prime_video/Providers/UIProviders/bottom_navbar_provider.dart';
 import 'package:prime_video/Providers/UIProviders/custom_checkbox_provider.dart';
 import 'package:prime_video/Screens/home_screen.dart';
 import 'package:prime_video/Screens/login_screen.dart';
-import 'package:prime_video/Services/auth_service.dart';
-import 'package:provider/provider.dart';
 
-void main() async {
+Future main() async {
+  print("Restarting the complete the app");
   //Firebase.initializeApp();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  Directory directory = await pathprovider.getApplicationDocumentsDirectory();
+  print(directory.path);
+  Hive.init(directory.path);
+  Hive.registerAdapter(HiveMovieModelAdapter());
+  await Hive.openBox<HiveMovieModel>('hiveMovieModelWatchlist');
   runApp(const MyApp());
 }
 

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/services.dart';
-import 'package:prime_video/Screens/home_screen.dart';
-import 'package:prime_video/prime_colors.dart';
 import 'package:video_player/video_player.dart';
 
 String trailerUrl =

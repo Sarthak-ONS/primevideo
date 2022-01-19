@@ -4,6 +4,7 @@ import 'package:prime_video/Providers/BProviders/current_user_provider.dart';
 import 'package:prime_video/Screens/home_screen.dart';
 import 'package:prime_video/Services/auth_exceptions.dart';
 import 'package:prime_video/Services/email_verification_service.dart';
+import 'package:prime_video/Services/firestore_service.dart';
 import 'package:prime_video/routes.dart';
 import 'package:provider/provider.dart';
 
@@ -22,6 +23,9 @@ class FirebaseAuthApi {
       SendEmailVerificationMail()
           .sendEmailVerificaionMail(name: name, email: email, context: context);
 
+      await FirebaseFirestoreApi()
+          .createProfileInDatabase(userCredential.user!.uid);
+
       ///
       print(userCredential.user!.email);
     } on FirebaseAuthException catch (e) {
@@ -38,7 +42,7 @@ class FirebaseAuthApi {
     try {
       UserCredential userCredential = await _firebaseAuth
           .signInWithEmailAndPassword(email: email!, password: password!);
-
+      print(userCredential);
       //Change Credential Provider
       //Go to Home Page
       Navigator.of(context!).pushAndRemoveUntil(

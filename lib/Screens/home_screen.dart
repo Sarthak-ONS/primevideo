@@ -1,10 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:prime_video/Providers/UIProviders/bottom_navbar_provider.dart';
 import 'package:prime_video/Screens/Tabs/downloads_tab.dart';
 import 'package:prime_video/Screens/Tabs/home_tab.dart';
 import 'package:prime_video/Screens/Tabs/search_tab.dart';
 import 'package:prime_video/Screens/Tabs/user_profile.dart';
-import 'package:prime_video/Services/auth_service.dart';
 import 'package:prime_video/prime_colors.dart';
 import 'package:provider/provider.dart';
 
@@ -35,6 +36,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
+  void dispose() {
+    Hive.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     print("Widget is not Rebuilding");
     return Scaffold(
@@ -51,8 +58,10 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           Provider.of<BottomNavBarProvider>(context).currentIndex == 3
               ? IconButton(
-                  onPressed: () {},
-                  icon: Icon(
+                  onPressed: () {
+                    FirebaseAuth.instance.signOut();
+                  },
+                  icon: const Icon(
                     Icons.settings,
                     color: Colors.white,
                   ),

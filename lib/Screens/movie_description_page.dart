@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:prime_video/Models/movie_model_hive.dart';
 import 'package:prime_video/Providers/BProviders/trending_provider.dart';
 import 'package:prime_video/Widgets/custom_spacer.dart';
 import 'package:prime_video/Widgets/play_video.dart';
@@ -172,7 +174,14 @@ class _MovieDescriptionScreenState extends State<MovieDescriptionScreen> {
                                 MovieDescriptionControlWidget(
                                   icons: Icons.watch_later_outlined,
                                   title: 'Watchlist',
-                                  callback: () {},
+                                  callback: () {
+                                    addthisMovietoWatchList(
+                                      adult: snapshot.data!.get("adult"),
+                                      backdropPath: widget.backdrop_poster,
+                                      movieId: widget.movieID.toString(),
+                                      title: widget.movie_name,
+                                    );
+                                  },
                                 ),
                                 MovieDescriptionControlWidget(
                                   icons: Icons.share,
@@ -292,6 +301,38 @@ class _MovieDescriptionScreenState extends State<MovieDescriptionScreen> {
   }
 }
 
+Future addthisMovietoWatchList({
+  required bool adult,
+  required String backdropPath,
+  required String movieId,
+  required String title,
+}) async {
+  final movieModeltobeaddedtoHive = HiveMovieModel()
+    ..adult = adult
+    ..backdropPath = backdropPath
+    ..id = movieId
+    ..title = title;
+
+  final box = Hive.box('hivemoviemodelwatchlist');
+  print(movieId);
+
+  List boxKeys = box.keys.toList();
+  if (boxKeys.contains(movieId)) {
+    print("Movie was already watchListed. ");
+    print("Cancelling Operation for adding movies");
+    return;
+  }
+
+  box
+      .put(
+        movieId,
+        movieModeltobeaddedtoHive,
+      )
+      .then(
+        (value) => print("Movie Successfully Added to the Database,"),
+      );
+}
+
 class MovieDescriptionControlWidget extends StatelessWidget {
   const MovieDescriptionControlWidget(
       {Key? key,
@@ -335,10 +376,6 @@ class MovieDescriptionControlWidget extends StatelessWidget {
     );
   }
 }
-
-// To parse this JSON data, do
-//
-//     final singleMovieModel = singleMovieModelFromJson(jsonString);
 
 SingleMovieModel singleMovieModelFromJson(String str) =>
     SingleMovieModel.fromJson(json.decode(str));
@@ -521,4 +558,9 @@ class SpokenLanguage {
         "iso_639_1": iso6391,
         "name": name,
       };
+}
+
+class Boxes {
+  static Box<HiveMovieModel> getWatchListBox() =>
+      Hive.box<HiveMovieModel>('hiveMovieModelWatchlist');
 }

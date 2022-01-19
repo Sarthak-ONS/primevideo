@@ -1,6 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:prime_video/Models/movie_model_hive.dart';
+import 'package:prime_video/Screens/movie_description_page.dart';
 import 'package:prime_video/Widgets/custom_spacer.dart';
 import 'package:prime_video/prime_colors.dart';
 
@@ -68,7 +72,7 @@ class _UserProfileState extends State<UserProfile> {
                     fontFamily: 'Poppins',
                     fontSize: 17,
                   ),
-                )
+                ),
               ],
             ),
           ),
