@@ -36,4 +36,7 @@ class HiveMovieModel extends HiveObject {
 
   @HiveField(10)
   String? mediaType;
+
+  @HiveField(11)
+  String? downloadedPath;
 }

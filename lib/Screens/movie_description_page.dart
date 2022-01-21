@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -20,16 +18,18 @@ import '../private_variable.dart';
 class MovieDescriptionScreen extends StatefulWidget {
   const MovieDescriptionScreen(
       {Key? key,
-      this.backdrop_poster,
+      this.backdropposter,
       this.movieID,
-      this.movie_name,
-      this.description})
+      this.moviename,
+      this.description,
+      this.index})
       : super(key: key);
 
-  final movieID;
-  final backdrop_poster;
-  final movie_name;
-  final description;
+  final int? movieID;
+  final String? backdropposter;
+  final String? moviename;
+  final String? description;
+  final String? index;
 
   @override
   _MovieDescriptionScreenState createState() => _MovieDescriptionScreenState();
@@ -47,7 +47,7 @@ class _MovieDescriptionScreenState extends State<MovieDescriptionScreen> {
         showInfoLogs: true,
       ),
     );
-    final res = await _tmdb.v3.movies.getDetails(widget.movieID);
+    final res = await _tmdb.v3.movies.getDetails(widget.movieID!);
     singleMovieModel = SingleMovieModel.fromJson(res);
 
     for (var i = 0; i < singleMovieModel!.genres!.length; i++) {
@@ -119,7 +119,7 @@ class _MovieDescriptionScreenState extends State<MovieDescriptionScreen> {
                       height: MediaQuery.of(context).size.height * 0.30,
                       color: PrimeColors.primaryColor,
                       child: Image.network(
-                        widget.backdrop_poster!,
+                        widget.backdropposter!,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -135,7 +135,7 @@ class _MovieDescriptionScreenState extends State<MovieDescriptionScreen> {
                               vertical: 15.0,
                             ),
                             child: Text(
-                              widget.movie_name,
+                              widget.moviename!,
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -175,7 +175,9 @@ class _MovieDescriptionScreenState extends State<MovieDescriptionScreen> {
                                 MovieDescriptionControlWidget(
                                   icons: Icons.download_for_offline,
                                   title: 'Download',
-                                  callback: () {},
+                                  callback: () {
+                                    print("Initiating Downlod Fot the movie");
+                                  },
                                 ),
                                 MovieDescriptionControlWidget(
                                   icons: isWatchListed!
@@ -195,10 +197,10 @@ class _MovieDescriptionScreenState extends State<MovieDescriptionScreen> {
                                     await FirebaseFirestoreApi()
                                         .addMovietoWatchList(
                                       widget.movieID.toString(),
-                                      widget.movie_name,
-                                      widget.backdrop_poster,
-                                      widget.backdrop_poster,
-                                      widget.description,
+                                      widget.moviename!,
+                                      widget.backdropposter!,
+                                      widget.backdropposter!,
+                                      widget.description!,
                                       snapshot.data!.get("release_date"),
                                       snapshot.data!.get("duration").toString(),
                                     );
@@ -221,7 +223,7 @@ class _MovieDescriptionScreenState extends State<MovieDescriptionScreen> {
                               horizontal: 8.0,
                             ),
                             child: Text(
-                              widget.description,
+                              widget.description!,
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w600,
@@ -281,7 +283,7 @@ class _MovieDescriptionScreenState extends State<MovieDescriptionScreen> {
                               : Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 8.0),
-                                  child: Container(
+                                  child: SizedBox(
                                     height: 50,
                                     child: ListView.builder(
                                       scrollDirection: Axis.horizontal,
@@ -322,38 +324,6 @@ class _MovieDescriptionScreenState extends State<MovieDescriptionScreen> {
       ),
     );
   }
-}
-
-Future addthisMovietoWatchList({
-  required bool adult,
-  required String backdropPath,
-  required String movieId,
-  required String title,
-}) async {
-  final movieModeltobeaddedtoHive = HiveMovieModel()
-    ..adult = adult
-    ..backdropPath = backdropPath
-    ..id = movieId
-    ..title = title;
-
-  final box = Hive.box('hivemoviemodelwatchlist');
-  print(movieId);
-
-  List boxKeys = box.keys.toList();
-  if (boxKeys.contains(movieId)) {
-    print("Movie was already watchListed. ");
-    print("Cancelling Operation for adding movies");
-    return;
-  }
-
-  box
-      .put(
-        movieId,
-        movieModeltobeaddedtoHive,
-      )
-      .then(
-        (value) => print("Movie Successfully Added to the Database,"),
-      );
 }
 
 class MovieDescriptionControlWidget extends StatelessWidget {
@@ -406,7 +376,7 @@ class MovieDescriptionControlWidget extends StatelessWidget {
 
 class Boxes {
   static Box<HiveMovieModel> getWatchListBox() =>
-      Hive.box<HiveMovieModel>('hiveMovieModelWatchlist');
+      Hive.box<HiveMovieModel>('hiveMoviesForDownloads');
 }
 //  await FirebaseFirestore.instance
 //                 .collection('AllMovies')

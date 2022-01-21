@@ -26,23 +26,27 @@ class TopRatedMedia extends StatelessWidget {
                   Navigator.of(context).push(
                     createRoute(
                       MovieDescriptionScreen(
-                        backdrop_poster:
+                        backdropposter:
                             snapshot.data!.docs[index].get("backdrop_path"),
                         movieID: snapshot.data!.docs[index].get("id"),
-                        movie_name: snapshot.data!.docs[index].get("name"),
+                        moviename: snapshot.data!.docs[index].get("name"),
                         description: snapshot.data!.docs[index].get("overview"),
+                        index: index.toString(),
                       ),
                     ),
                   );
                 },
-                child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5.0),
-                      color: PrimeColors.primaryColor),
-                  height: 150,
-                  padding: const EdgeInsets.symmetric(horizontal: 5),
-                  child: Image.network(
-                    snapshot.data!.docs[index].get("poster_path"),
+                child: Hero(
+                  tag: '$index',
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5.0),
+                        color: PrimeColors.primaryColor),
+                    height: 150,
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    child: Image.network(
+                      snapshot.data!.docs[index].get("poster_path"),
+                    ),
                   ),
                 ),
               );
@@ -74,11 +78,12 @@ class RecommendedMedia extends StatelessWidget {
                   Navigator.of(context).push(
                     createRoute(
                       MovieDescriptionScreen(
-                        backdrop_poster:
+                        backdropposter:
                             snapshot.data!.docs[index].get("backdrop_path"),
                         movieID: snapshot.data!.docs[index].get("id"),
-                        movie_name: snapshot.data!.docs[index].get("name"),
+                        moviename: snapshot.data!.docs[index].get("name"),
                         description: snapshot.data!.docs[index].get("overview"),
+                        index: index.toString(),
                       ),
                     ),
                   );
@@ -122,11 +127,12 @@ class UpcomingMedia extends StatelessWidget {
                   Navigator.of(context).push(
                     createRoute(
                       MovieDescriptionScreen(
-                        backdrop_poster:
+                        backdropposter:
                             snapshot.data!.docs[index].get("backdrop_path"),
                         movieID: snapshot.data!.docs[index].get("id"),
-                        movie_name: snapshot.data!.docs[index].get("name"),
+                        moviename: snapshot.data!.docs[index].get("name"),
                         description: snapshot.data!.docs[index].get("overview"),
+                        index: index.toString(),
                       ),
                     ),
                   );
@@ -170,11 +176,12 @@ class NowPlaying extends StatelessWidget {
                   Navigator.of(context).push(
                     createRoute(
                       MovieDescriptionScreen(
-                        backdrop_poster:
+                        backdropposter:
                             snapshot.data!.docs[index].get("backdrop_path"),
                         movieID: snapshot.data!.docs[index].get("id"),
-                        movie_name: snapshot.data!.docs[index].get("name"),
+                        moviename: snapshot.data!.docs[index].get("name"),
                         description: snapshot.data!.docs[index].get("overview"),
+                        index: index.toString(),
                       ),
                     ),
                   );
@@ -216,36 +223,36 @@ List _movies = [
   "https://m.media-amazon.com/images/G/01/digital/video/sonata/PV_IN_MarDec/e813e13e-a867-4e5d-989f-c82e3c5be3da._UR200,200_SX200_FMwebp_.jpg"
 ];
 
-class BuildLanguageWidget extends StatelessWidget {
-  const BuildLanguageWidget({Key? key}) : super(key: key);
+// class BuildLanguageWidget extends StatelessWidget {
+//   const BuildLanguageWidget({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: _movies.length,
-      scrollDirection: Axis.horizontal,
-      itemBuilder: (context, index) {
-        return GestureDetector(
-          onTap: () {
-            Navigator.of(context).push(
-              createRoute(
-                const MovieDescriptionScreen(),
-              ),
-            );
-          },
-          child: Container(
-            width: 125,
-            height: 130,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5.0),
-              color: PrimeColors.primaryColor,
-            ),
-            child: Image.network(
-              _movies[index],
-            ),
-          ),
-        );
-      },
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return ListView.builder(
+//       itemCount: _movies.length,
+//       scrollDirection: Axis.horizontal,
+//       itemBuilder: (context, index) {
+//         return GestureDetector(
+//           onTap: () {
+//             Navigator.of(context).push(
+//               createRoute(
+//                  MovieDescriptionScreen(index: index.toString(),),
+//               ),
+//             );
+//           },
+//           child: Container(
+//             width: 125,
+//             height: 130,
+//             decoration: BoxDecoration(
+//               borderRadius: BorderRadius.circular(5.0),
+//               color: PrimeColors.primaryColor,
+//             ),
+//             child: Image.network(
+//               _movies[index],
+//             ),
+//           ),
+//         );
+//       },
+//     );
+//   }
+// }

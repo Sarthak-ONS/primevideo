@@ -41,6 +41,8 @@ dependencies:
   http: ^0.13.4
   hive: ^2.0.5
   hive_flutter: ^1.1.0
+  permission_handler: ^8.3.0
+  flowder: ^0.2.0
   path_provider:
 
 

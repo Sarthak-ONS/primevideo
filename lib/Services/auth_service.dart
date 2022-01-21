@@ -4,7 +4,6 @@ import 'package:prime_video/Providers/BProviders/current_user_provider.dart';
 import 'package:prime_video/Screens/home_screen.dart';
 import 'package:prime_video/Services/auth_exceptions.dart';
 import 'package:prime_video/Services/email_verification_service.dart';
-import 'package:prime_video/Services/firestore_service.dart';
 import 'package:prime_video/routes.dart';
 import 'package:provider/provider.dart';
 

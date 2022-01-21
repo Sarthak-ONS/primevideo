@@ -24,6 +24,8 @@ class _HomeScreenState extends State<HomeScreen> {
     UserProfile(),
   ];
 
+  final Color colorwhite = Colors.white;
+
   _onTapNavBarItem(int index) {
     Provider.of<BottomNavBarProvider>(context, listen: false)
         .changeCurrentIndex(index);
@@ -84,10 +86,34 @@ class _HomeScreenState extends State<HomeScreen> {
         elevation: 0,
         onTap: _onTapNavBarItem,
         items: [
-          buildbottomNavBarItem(imageUrl: 'pentagon', title: 'Home'),
-          buildbottomNavBarItem(imageUrl: 'search', title: 'Find'),
-          buildbottomNavBarItem(imageUrl: 'download', title: 'Downloads'),
-          buildbottomNavBarItem(imageUrl: 'user', title: 'My Stuff')
+          buildbottomNavBarItem(
+              imageUrl: 'pentagon',
+              title: 'Home',
+              color:
+                  Provider.of<BottomNavBarProvider>(context).currentIndex == 0
+                      ? PrimeColors.primaryBlueColor
+                      : colorwhite),
+          buildbottomNavBarItem(
+              imageUrl: 'search',
+              title: 'Find',
+              color:
+                  Provider.of<BottomNavBarProvider>(context).currentIndex == 1
+                      ? PrimeColors.primaryBlueColor
+                      : colorwhite),
+          buildbottomNavBarItem(
+              imageUrl: 'download',
+              title: 'Downloads',
+              color:
+                  Provider.of<BottomNavBarProvider>(context).currentIndex == 2
+                      ? PrimeColors.primaryBlueColor
+                      : colorwhite),
+          buildbottomNavBarItem(
+              imageUrl: 'user',
+              title: 'My Stuff',
+              color:
+                  Provider.of<BottomNavBarProvider>(context).currentIndex == 3
+                      ? PrimeColors.primaryBlueColor
+                      : colorwhite)
         ],
       ),
       body: _tabs[Provider.of<BottomNavBarProvider>(context).currentIndex],
@@ -97,12 +123,13 @@ class _HomeScreenState extends State<HomeScreen> {
   BottomNavigationBarItem buildbottomNavBarItem({
     required String imageUrl,
     required String title,
+    Color? color = Colors.white,
   }) {
     return BottomNavigationBarItem(
       icon: Image.asset(
         'Assets/Images/$imageUrl.png',
-        color: PrimeColors.primaryBlueColor,
-        height: 25,
+        color: color!,
+        height: 22,
       ),
       label: title,
     );

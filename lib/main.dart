@@ -5,9 +5,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:prime_video/Models/movie_model_hive.dart';
-import 'package:prime_video/Screens/verify_mail_screen.dart';
-import 'package:prime_video/Services/email_verification_service.dart';
-import 'package:prime_video/Services/firestore_service.dart';
 import 'package:provider/provider.dart';
 import 'package:path_provider/path_provider.dart' as pathprovider;
 
@@ -20,14 +17,14 @@ import 'package:prime_video/Screens/login_screen.dart';
 
 Future main() async {
   print("Restarting the complete the app");
-  //Firebase.initializeApp();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   Directory directory = await pathprovider.getApplicationDocumentsDirectory();
   print(directory.path);
+
   Hive.init(directory.path);
   Hive.registerAdapter(HiveMovieModelAdapter());
-  await Hive.openBox<HiveMovieModel>('hiveMovieModelWatchlist');
+  await Hive.openBox<HiveMovieModel>('hiveMoviesForDownloads');
   runApp(const MyApp());
 }
 

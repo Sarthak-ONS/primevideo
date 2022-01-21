@@ -9,7 +9,7 @@ class CustomRoutes {
     '/': (context) => const LoginScreen(),
     'signup': (context) => const SignupScreen(),
     'home': (context) => const HomeScreen(),
-    'movieDescription': (context) => const MovieDescriptionScreen()
+    'movieDescription': (context) => MovieDescriptionScreen()
   };
 }
 

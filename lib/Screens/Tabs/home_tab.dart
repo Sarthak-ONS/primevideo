@@ -41,7 +41,7 @@ class _HomeTabState extends State<HomeTab> {
     print(moviesListFromServer.length);
   }
 
-  List<movielModel> _movieListsForTrending = [];
+  final List<movielModel> _movieListsForTrending = [];
 
   @override
   void initState() {
@@ -92,7 +92,7 @@ class _HomeTabState extends State<HomeTab> {
           //// Container For Top Rated
 
           Container(
-            padding: EdgeInsets.only(left: 5),
+            padding: const EdgeInsets.only(left: 5),
             child: Column(
               children: [
                 SizedBox(

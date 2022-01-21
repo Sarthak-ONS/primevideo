@@ -52,10 +52,10 @@ class _TrendingMoviesState extends State<TrendingMovies> {
                     Navigator.of(context).push(
                       createRoute(
                         MovieDescriptionScreen(
-                          backdrop_poster:
+                          backdropposter:
                               snapshot.data!.docs[index].get("backdrop_path"),
                           movieID: snapshot.data!.docs[index].get("id"),
-                          movie_name: snapshot.data!.docs[index].get("name"),
+                          moviename: snapshot.data!.docs[index].get("name"),
                           description:
                               snapshot.data!.docs[index].get("overview"),
                         ),

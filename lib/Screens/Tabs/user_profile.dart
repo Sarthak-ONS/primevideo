@@ -35,11 +35,11 @@ class _UserProfileState extends State<UserProfile> {
                         print(FirebaseAuth.instance.currentUser!.photoURL);
                       },
                       child: CircleAvatar(
-                        radius: 43,
+                        radius: 33,
                         backgroundColor: PrimeColors.primaryBlueColor,
                         child: CircleAvatar(
                           backgroundColor: PrimeColors.primaryBlueColor,
-                          radius: 40,
+                          radius: 30,
                           backgroundImage: NetworkImage(
                             FirebaseAuth.instance.currentUser!.photoURL !=
                                     "null"
@@ -49,7 +49,7 @@ class _UserProfileState extends State<UserProfile> {
                         ),
                       ),
                     ),
-                    buildWidthSizedBox(width: 25),
+                    buildWidthSizedBox(width: 15),
                     Text(
                       FirebaseAuth.instance.currentUser!.displayName == null
                           ? ""
@@ -109,9 +109,9 @@ class _UserProfileState extends State<UserProfile> {
                             createRoute(
                               MovieDescriptionScreen(
                                 movieID: tempSnap[index]['id'],
-                                backdrop_poster: tempSnap[index]
+                                backdropposter: tempSnap[index]
                                     ['backdrop_path'],
-                                movie_name: tempSnap[index]['name'],
+                                moviename: tempSnap[index]['name'],
                                 description: tempSnap[index]['overview'],
                               ),
                             ),

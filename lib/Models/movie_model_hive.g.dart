@@ -27,13 +27,14 @@ class HiveMovieModelAdapter extends TypeAdapter<HiveMovieModel> {
       ..video = fields[7] as bool?
       ..overview = fields[8] as String?
       ..genreIds = (fields[9] as List?)?.cast<int>()
-      ..mediaType = fields[10] as String?;
+      ..mediaType = fields[10] as String?
+      ..downloadedPath = fields[11] as String?;
   }
 
   @override
   void write(BinaryWriter writer, HiveMovieModel obj) {
     writer
-      ..writeByte(11)
+      ..writeByte(12)
       ..writeByte(0)
       ..write(obj.adult)
       ..writeByte(1)
@@ -55,7 +56,9 @@ class HiveMovieModelAdapter extends TypeAdapter<HiveMovieModel> {
       ..writeByte(9)
       ..write(obj.genreIds)
       ..writeByte(10)
-      ..write(obj.mediaType);
+      ..write(obj.mediaType)
+      ..writeByte(11)
+      ..write(obj.downloadedPath);
   }
 
   @override
