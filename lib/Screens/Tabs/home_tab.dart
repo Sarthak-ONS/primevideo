@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:prime_video/Models/movie_model.dart';
 import 'package:prime_video/Providers/BProviders/current_user_provider.dart';
+import 'package:prime_video/Services/download_movie.dart';
 import 'package:prime_video/Widgets/custom_spacer.dart';
 import 'package:prime_video/Widgets/media_prime.dart';
 import 'package:prime_video/Widgets/trending_media.dart';
@@ -45,7 +46,7 @@ class _HomeTabState extends State<HomeTab> {
 
   @override
   void initState() {
-    loadMovies();
+    //loadMovies();
     super.initState();
   }
 
@@ -54,7 +55,8 @@ class _HomeTabState extends State<HomeTab> {
     return Scaffold(
       backgroundColor: PrimeColors.primaryColor,
       floatingActionButton: FloatingActionButton(onPressed: () async {
-        print(Provider.of<CurrentUserProvider>(context, listen: false).name);
+        DownloadApi().downloadAMovie(
+            downloadMovieName: 'Sarah', downloadMovieID: '12345');
         // _movieListsForTrending.clear();
         // for (var item in _movieListsForTrending) {
         //   FirebaseFirestore.instance.collection('Now Playing').add(

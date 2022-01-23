@@ -1,8 +1,8 @@
 import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:hive/hive.dart';
 import 'package:prime_video/Models/movie_model_hive.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +21,7 @@ Future main() async {
   await Firebase.initializeApp();
   Directory directory = await pathprovider.getApplicationDocumentsDirectory();
   print(directory.path);
-
+  FlutterDownloader.initialize();
   Hive.init(directory.path);
   Hive.registerAdapter(HiveMovieModelAdapter());
   await Hive.openBox<HiveMovieModel>('hiveMoviesForDownloads');

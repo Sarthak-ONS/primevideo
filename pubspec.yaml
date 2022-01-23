@@ -42,7 +42,7 @@ dependencies:
   hive: ^2.0.5
   hive_flutter: ^1.1.0
   permission_handler: ^8.3.0
-  flowder: ^0.2.0
+  flutter_downloader: ^1.7.1
   path_provider:
 
 

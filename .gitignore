@@ -35,6 +35,9 @@
 lib/generated_plugin_registrant.dart
 lib/private_variable.dart
 
+
+private_files/mux-TokenForDev.env
+
 # Symbolication related
 app.*.symbols
 
