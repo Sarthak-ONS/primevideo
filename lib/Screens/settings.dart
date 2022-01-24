@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:prime_video/Services/auth_service.dart';
+import 'package:prime_video/prime_colors.dart';
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
@@ -69,8 +70,9 @@ class _SettingsState extends State<Settings> {
               controlAffinity: ListTileControlAffinity.trailing,
             ),
             CheckboxListTile(
-              value: false,
+              value: true,
               onChanged: (value) {},
+              activeColor: PrimeColors.primaryBlueColor,
               title: const Text(
                 'Autoplay Next Episode',
                 style: TextStyle(
@@ -81,7 +83,7 @@ class _SettingsState extends State<Settings> {
             ),
             ListTile(
               title: const Text(
-                'Signout',
+                'Signout of the Device',
                 style: TextStyle(
                   color: Colors.white,
                 ),

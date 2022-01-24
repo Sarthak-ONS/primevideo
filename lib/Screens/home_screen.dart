@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hive/hive.dart';
 import 'package:prime_video/Providers/UIProviders/bottom_navbar_provider.dart';
 import 'package:prime_video/Screens/Tabs/downloads_tab.dart';
@@ -34,11 +36,33 @@ class _HomeScreenState extends State<HomeScreen> {
         .changeCurrentIndex(index);
   }
 
+  Future firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+    // If you're going to use other Firebase services in the background, such as Firestore,
+    // make sure you call `initializeApp` before using other Firebase services.
+    //await Firebase.initializeApp();
+
+    print("Handling a background message: ${message.messageId}");
+    print("Handling a background message: ${message.notification}");
+    print("Handling a background message: ${message.data}");
+    try {
+      await flutterLocalNotificationsPlugin.show(
+        0,
+        message.notification!.title,
+        message.notification!.body,
+        platform,
+        payload: message.data.toString(),
+      );
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   void initState() {
-    // FirebaseAuthApi().autoLoginChangeDetials(context);
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+    NotificationApi().getToken();
+    NotificationApi().onbackgroundMessageClick();
     NotificationApi().getforegroundMessages();
-    NotificationApi().getbackgroundMessage();
     super.initState();
   }
 

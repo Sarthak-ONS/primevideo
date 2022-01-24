@@ -188,7 +188,7 @@ class NowPlaying extends StatelessWidget {
                 },
                 child: Container(
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5.0),
+                      borderRadius: BorderRadius.circular(25.0),
                       color: PrimeColors.primaryColor),
                   height: 150,
                   padding: const EdgeInsets.symmetric(horizontal: 5),
