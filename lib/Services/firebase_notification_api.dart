@@ -4,11 +4,15 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-const AndroidInitializationSettings initializationSettingsAndroid =
-    AndroidInitializationSettings('@mipmap/ic_launcher');
-
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
+
+const AndroidNotificationChannel channel = AndroidNotificationChannel(
+  'my_channel', // id
+  'My Channel', // title
+  description: 'Important notifications from my server.', // description
+  importance: Importance.high,
+);
 
 var android = const AndroidNotificationDetails(
   'abcdefgh',
@@ -16,6 +20,8 @@ var android = const AndroidNotificationDetails(
   channelDescription: 'CHANNEL DESCRIPTION',
   importance: Importance.max,
   priority: Priority.high,
+  enableLights: true,
+  enableVibration: true,
   ticker: 'ticker',
 );
 
@@ -23,11 +29,15 @@ var ios = const IOSNotificationDetails();
 
 var platform = NotificationDetails(android: android, iOS: ios);
 
-AndroidNotificationChannel androidNotificationChannel =
-    const AndroidNotificationChannel('abcdefgh', 'main');
-
 class NotificationApi {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+
+  NotificationApi() {
+    flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
+  }
 
   Future firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     print("Handling a background message: ${message.messageId}");
@@ -46,8 +56,6 @@ class NotificationApi {
     }
   }
 
-// Initate this method for Setting up the channel.
-// Opens the app from the terminated State.
   Future getInitialMessages() async {
     RemoteMessage? res = await FirebaseMessaging.instance.getInitialMessage();
     print(res!.notification);
@@ -64,6 +72,17 @@ class NotificationApi {
 
 //Method for Notification recieved when app is in Foreround
   Future getforegroundMessages() async {
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
+
+    await flutterLocalNotificationsPlugin.initialize(
+      const InitializationSettings(
+        android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+      ),
+    );
+
     try {
       FirebaseMessaging.onMessage.listen(
         (RemoteMessage message) async {
