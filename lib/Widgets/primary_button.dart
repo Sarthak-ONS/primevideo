@@ -18,7 +18,7 @@ buildPrimaryButton(callBack, String title,
         child: isWatchNow!
             ? Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.play_arrow,
                     color: Colors.white,
                   ),

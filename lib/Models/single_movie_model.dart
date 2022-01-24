@@ -34,7 +34,7 @@ class SingleMovieModel {
 
   final bool? adult;
   final String? backdropPath;
-  final dynamic? belongsToCollection;
+  final dynamic belongsToCollection;
   final int? budget;
   final List<Genre>? genres;
   final String? homepage;
@@ -44,7 +44,7 @@ class SingleMovieModel {
   final String? originalTitle;
   final String? overview;
   final double? popularity;
-  final dynamic? posterPath;
+  final dynamic posterPath;
   final List<ProductionCompany>? productionCompanies;
   final List<ProductionCountry>? productionCountries;
   final String? releaseDate;

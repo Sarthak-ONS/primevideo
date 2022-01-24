@@ -5,6 +5,7 @@ import 'package:prime_video/Models/movie_model_hive.dart';
 import 'package:prime_video/Models/single_movie_model.dart';
 import 'package:prime_video/Providers/BProviders/trending_provider.dart';
 import 'package:prime_video/Services/firestore_service.dart';
+import 'package:prime_video/Services/movie_streaming.dart';
 import 'package:prime_video/Widgets/custom_spacer.dart';
 import 'package:prime_video/Widgets/play_video.dart';
 import 'package:prime_video/Widgets/primary_button.dart';
@@ -85,7 +86,10 @@ class _MovieDescriptionScreenState extends State<MovieDescriptionScreen> {
     return SafeArea(
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
-          onPressed: () async {},
+          onPressed: () async {
+            print("Movie");
+            //Set the playbackId to "" for all Document.
+          },
         ),
         backgroundColor: PrimeColors.primaryColor,
         body: Stack(
@@ -147,7 +151,7 @@ class _MovieDescriptionScreenState extends State<MovieDescriptionScreen> {
                             () {
                               Navigator.of(context).push(
                                 createRoute(
-                                  const PlayVideo(),
+                                  const VdoPlaybackView(),
                                 ),
                               );
                             },

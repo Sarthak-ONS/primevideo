@@ -6,7 +6,10 @@ import 'package:prime_video/Screens/Tabs/downloads_tab.dart';
 import 'package:prime_video/Screens/Tabs/home_tab.dart';
 import 'package:prime_video/Screens/Tabs/search_tab.dart';
 import 'package:prime_video/Screens/Tabs/user_profile.dart';
+import 'package:prime_video/Screens/settings.dart';
+import 'package:prime_video/Services/firebase_notification_api.dart';
 import 'package:prime_video/prime_colors.dart';
+import 'package:prime_video/routes.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -34,6 +37,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     // FirebaseAuthApi().autoLoginChangeDetials(context);
+    NotificationApi().getforegroundMessages();
+    NotificationApi().getbackgroundMessage();
     super.initState();
   }
 
@@ -61,7 +66,8 @@ class _HomeScreenState extends State<HomeScreen> {
           Provider.of<BottomNavBarProvider>(context).currentIndex == 3
               ? IconButton(
                   onPressed: () {
-                    FirebaseAuth.instance.signOut();
+                    // FirebaseAuth.instance.signOut();
+                    Navigator.of(context).push(createRoute(const Settings()));
                   },
                   icon: const Icon(
                     Icons.settings,

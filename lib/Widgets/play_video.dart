@@ -1,109 +1,102 @@
 import 'package:flutter/material.dart';
-import 'package:chewie/chewie.dart';
-import 'package:flutter/services.dart';
-import 'package:video_player/video_player.dart';
+import 'package:prime_video/Services/movie_streaming.dart';
+import 'package:vdocipher_flutter/vdocipher_flutter.dart';
 
-String trailerUrl =
-    "https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4";
-
-class PlayVideoForMovies extends StatefulWidget {
-  const PlayVideoForMovies({Key? key}) : super(key: key);
+class VdoPlaybackView extends StatefulWidget {
+  const VdoPlaybackView({Key? key}) : super(key: key);
 
   @override
-  _PlayVideoForMoviesState createState() => _PlayVideoForMoviesState();
+  _VdoPlaybackViewState createState() => _VdoPlaybackViewState();
 }
 
-class _PlayVideoForMoviesState extends State<PlayVideoForMovies> {
-  final videoPlayerController = VideoPlayerController.network(trailerUrl);
-
-  ChewieController? chewieController;
+class _VdoPlaybackViewState extends State<VdoPlaybackView> {
+  VdoPlayerController? _controller;
+  final double aspectRatio = 4 / 3;
+  final ValueNotifier<bool> _isFullScreen = ValueNotifier(true);
 
   @override
   void initState() {
+    startStreaming();
     super.initState();
-
-    chewieController = ChewieController(
-      videoPlayerController: videoPlayerController,
-      autoInitialize: true,
-      fullScreenByDefault: true,
-      showControlsOnInitialize: false,
-      materialProgressColors:
-          ChewieProgressColors(backgroundColor: Colors.transparent),
-      cupertinoProgressColors: ChewieProgressColors(),
-      placeholder: const Center(
-        child: Text(
-          'Your Video is being loaded',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
-          ),
-        ),
-      ),
-      autoPlay: true,
-      allowFullScreen: true,
-
-      deviceOrientationsAfterFullScreen: [
-        DeviceOrientation.landscapeRight,
-        DeviceOrientation.landscapeLeft,
-        DeviceOrientation.portraitUp,
-        DeviceOrientation.portraitDown,
-      ],
-      aspectRatio: 16 / 9,
-      // showControls: true,
-      allowPlaybackSpeedChanging: true,
-      startAt: const Duration(seconds: 0),
-      customControls: CupertinoControls(
-        backgroundColor: Colors.transparent,
-        iconColor: Colors.white,
-      ),
-      looping: false,
-      showControls: true,
-    );
-    chewieController!.enterFullScreen();
-    chewieController!.addListener(() {
-      if (chewieController!.isFullScreen) {
-        SystemChrome.setPreferredOrientations([
-          DeviceOrientation.landscapeRight,
-          DeviceOrientation.landscapeLeft,
-        ]);
-      } else {
-        SystemChrome.setPreferredOrientations([
-          DeviceOrientation.portraitUp,
-          DeviceOrientation.portraitDown,
-        ]);
-      }
-    });
   }
 
   @override
   void dispose() {
+    savePosition();
     super.dispose();
-    videoPlayerController.dispose();
-    chewieController!.dispose();
+  }
+
+  Future savePosition() async {
+    Duration duration = await _controller!.getPosition();
+    print("The position where user left is ${duration.inSeconds}");
   }
 
   @override
   Widget build(BuildContext context) {
-    return Chewie(
-      controller: chewieController!,
+    return Scaffold(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Flexible(
+            child: SizedBox(
+              child: _embedInfo == null
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : VdoPlayer(
+                      embedInfo: _embedInfo!,
+                      onPlayerCreated: (controller) {
+                        _onPlayerCreated(controller);
+                      },
+                      onFullscreenChange: _onFullscreenChange,
+                      onError: _onVdoError,
+                    ),
+              width: MediaQuery.of(context).size.width,
+              height: _isFullScreen.value
+                  ? MediaQuery.of(context).size.height
+                  : _getHeightForWidth(MediaQuery.of(context).size.width),
+            ),
+          ),
+        ],
+      ),
     );
   }
-}
 
-class PlayVideo extends StatefulWidget {
-  const PlayVideo({Key? key}) : super(key: key);
+  _onVdoError(VdoError vdoError) {
+    print("Oops, the system encountered a problem: " + vdoError.message);
+    // Navigator.pop(context);
+  }
 
-  @override
-  _PlayVideoState createState() => _PlayVideoState();
-}
+  _onPlayerCreated(VdoPlayerController? controller) {
+    setState(() {
+      _controller = controller;
+      _onEventChange(_controller);
+    });
+  }
 
-class _PlayVideoState extends State<PlayVideo> {
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: Colors.black,
-      body: PlayVideoForMovies(),
-    );
+  _onEventChange(VdoPlayerController? controller) {
+    print("Event Change Was Called");
+    _controller!.addListener(() {
+      savePosition();
+    });
+  }
+
+  _onFullscreenChange(isFullscreen) {
+    print("Status of Screen : $isFullscreen");
+    setState(() {
+      _isFullScreen.value = true;
+    });
+  }
+
+  double _getHeightForWidth(double width) {
+    return width / aspectRatio;
+  }
+
+  EmbedInfo? _embedInfo;
+
+  Future startStreaming() async {
+    EmbedInfo embedInfo = await StreamingVideo().startSecureStreaming();
+    _embedInfo = embedInfo;
+    setState(() {});
   }
 }
