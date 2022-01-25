@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:prime_video/Providers/BProviders/settings_provider.dart';
 import 'package:prime_video/Services/auth_service.dart';
 import 'package:prime_video/prime_colors.dart';
+import 'package:provider/provider.dart';
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
@@ -45,70 +47,106 @@ class _SettingsState extends State<Settings> {
             ),
           ),
         ),
-        body: ListView(
-          children: [
-            CheckboxListTile(
-              value: false,
-              onChanged: (value) {},
-              title: const Text(
-                'Download Over Wifi only',
-                style: TextStyle(
-                  color: Colors.white,
+        body: ChangeNotifierProvider<SettingsProvider>(
+          create: (_) => SettingsProvider(),
+          child: ListView(
+            children: [
+              Consumer<SettingsProvider>(
+                builder: (context, mySettings, child) => CheckboxListTile(
+                  value: mySettings.isOverWifiOnly,
+                  onChanged: (value) {
+                    print("is Over Wifi Only: $value");
+                    if (value!) {
+                      mySettings.changeIsOverWifiOnly(false);
+                      return;
+                    } else {
+                      mySettings.changeIsOverWifiOnly(true);
+                      return;
+                    }
+                  },
+                  title: const Text(
+                    'Download Over Wifi only',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                  controlAffinity: ListTileControlAffinity.trailing,
                 ),
               ),
-              controlAffinity: ListTileControlAffinity.trailing,
-            ),
-            CheckboxListTile(
-              value: false,
-              onChanged: (value) {},
-              title: const Text(
-                'Notification',
-                style: TextStyle(
-                  color: Colors.white,
+              Consumer<SettingsProvider>(
+                builder: (context, mySettings, child) => CheckboxListTile(
+                  value: !mySettings.isNotificationOff!,
+                  onChanged: (value) {
+                    print("is Notification value : $value");
+                    if (value!) {
+                      mySettings.changeNotificationOff(false);
+                      return;
+                    } else {
+                      mySettings.changeNotificationOff(true);
+                      return;
+                    }
+                  },
+                  title: const Text(
+                    'Notification',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                  controlAffinity: ListTileControlAffinity.trailing,
                 ),
               ),
-              controlAffinity: ListTileControlAffinity.trailing,
-            ),
-            CheckboxListTile(
-              value: true,
-              onChanged: (value) {},
-              activeColor: PrimeColors.primaryBlueColor,
-              title: const Text(
-                'Autoplay Next Episode',
-                style: TextStyle(
-                  color: Colors.white,
+              Consumer<SettingsProvider>(
+                builder: (context, mySettings, child) => CheckboxListTile(
+                  value: mySettings.autoPlayNextEpisode,
+                  onChanged: (value) {
+                    print("is Auto Play Next Episode : $value");
+                    if (value!) {
+                      mySettings.changeAutoPlayNextEpisode(false);
+                      return;
+                    } else {
+                      mySettings.changeAutoPlayNextEpisode(true);
+                      return;
+                    }
+                  },
+                  activeColor: PrimeColors.primaryBlueColor,
+                  title: const Text(
+                    'Autoplay Next Episode',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                  controlAffinity: ListTileControlAffinity.trailing,
                 ),
               ),
-              controlAffinity: ListTileControlAffinity.trailing,
-            ),
-            ListTile(
-              title: const Text(
-                'Signout of the Device',
-                style: TextStyle(
-                  color: Colors.white,
+              ListTile(
+                title: const Text(
+                  'Signout of the Device',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                onTap: () async {
+                  await FirebaseAuthApi().signout();
+                },
+              ),
+              const ListTile(
+                title: Text(
+                  'Help & Feedback',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
                 ),
               ),
-              onTap: () async {
-                await FirebaseAuthApi().signout();
-              },
-            ),
-            const ListTile(
-              title: Text(
-                'Help & Feedback',
-                style: TextStyle(
-                  color: Colors.white,
+              const ListTile(
+                title: Text(
+                  'About and Legal',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
                 ),
               ),
-            ),
-            const ListTile(
-              title: Text(
-                'About and Legal',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

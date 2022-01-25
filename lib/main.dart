@@ -5,6 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:prime_video/Models/movie_model_hive.dart';
+import 'package:prime_video/Providers/BProviders/settings_provider.dart';
 import 'package:prime_video/Services/firebase_notification_api.dart';
 import 'package:provider/provider.dart';
 import 'package:path_provider/path_provider.dart' as pathprovider;
@@ -21,34 +22,12 @@ Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   Directory directory = await pathprovider.getApplicationDocumentsDirectory();
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   print(directory.path);
   Hive.init(directory.path);
   Hive.registerAdapter(HiveMovieModelAdapter());
   await Hive.openBox<HiveMovieModel>('hiveMoviesForDownloads');
   runApp(const MyApp());
-}
-
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // If you're going to use other Firebase services in the background, such as Firestore,
-  // make sure you call `initializeApp` before using other Firebase services.
-  //await Firebase.initializeApp();
-
-  print("Handling a background message: ${message.messageId}");
-  print("Handling a background message: ${message.notification}");
-  print("Handling a background message: ${message.data}");
-  try {
-    await flutterLocalNotificationsPlugin.show(
-      0,
-      message.notification!.title,
-      message.notification!.body,
-      platform,
-      payload: message.data.toString(),
-    );
-  } catch (e) {
-    print(e);
-  }
 }
 
 // class App extends StatelessWidget {
@@ -97,7 +76,7 @@ class MyApp extends StatelessWidget {
         ),
         ListenableProvider(
           create: (_) => MovieProvider(),
-        )
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

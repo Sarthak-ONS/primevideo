@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:prime_video/Models/movie_model.dart';
-import 'package:prime_video/Providers/BProviders/current_user_provider.dart';
 import 'package:prime_video/Services/download_movie.dart';
 import 'package:prime_video/Widgets/custom_spacer.dart';
 import 'package:prime_video/Widgets/media_prime.dart';
 import 'package:prime_video/Widgets/trending_media.dart';
 import 'package:prime_video/prime_colors.dart';
-import 'package:provider/provider.dart';
 import 'package:tmdb_api/tmdb_api.dart';
 
 import '../../private_variable.dart';

@@ -12,6 +12,7 @@ import 'package:prime_video/Services/firebase_notification_api.dart';
 import 'package:prime_video/prime_colors.dart';
 import 'package:prime_video/routes.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -35,33 +36,12 @@ class _HomeScreenState extends State<HomeScreen> {
         .changeCurrentIndex(index);
   }
 
-  Future firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-    // If you're going to use other Firebase services in the background, such as Firestore,
-    // make sure you call `initializeApp` before using other Firebase services.
-    //await Firebase.initializeApp();
-
-    print("Handling a background message: ${message.messageId}");
-    print("Handling a background message: ${message.notification}");
-    print("Handling a background message: ${message.data}");
-    try {
-      await flutterLocalNotificationsPlugin.show(
-        0,
-        message.notification!.title,
-        message.notification!.body,
-        platform,
-        payload: message.data.toString(),
-      );
-    } catch (e) {
-      print(e);
-    }
-  }
-
   @override
   void initState() {
-    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-    NotificationApi().getToken();
-    NotificationApi().onbackgroundMessageClick();
-    NotificationApi().getforegroundMessages();
+    NotificationApi(context).getToken();
+    NotificationApi(context).onbackgroundMessageClick(context);
+    NotificationApi(context).getforegroundMessages();
+    // NotificationApi().getbackgroundNOtificaion();
     FirebaseDynamicLinkApi().init(context);
     super.initState();
   }
@@ -74,7 +54,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("Widget is not Rebuilding");
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () async {},

@@ -13,6 +13,7 @@ import 'package:prime_video/Widgets/primary_button.dart';
 import 'package:prime_video/prime_colors.dart';
 import 'package:prime_video/routes.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:tmdb_api/tmdb_api.dart';
 
 import '../private_variable.dart';
@@ -228,6 +229,13 @@ class _MovieDescriptionScreenState extends State<MovieDescriptionScreen> {
                                         imageUrl: widget.backdropposter!,
                                         movieName: widget.moviename!,
                                       );
+                                      Share.share(
+                                        res.toString(),
+                                        sharePositionOrigin: Rect.fromCenter(
+                                            center: const Offset(0.5, 0.5),
+                                            width: 50,
+                                            height: 50),
+                                      );
                                       print(res);
                                     },
                                   ),
@@ -268,7 +276,6 @@ class _MovieDescriptionScreenState extends State<MovieDescriptionScreen> {
                                           ),
                                         ),
                             ),
-                            // ${snapshot.data!.get("ratings")}stars
                             buildHeightSizedBox(height: 5),
                             Padding(
                               padding:

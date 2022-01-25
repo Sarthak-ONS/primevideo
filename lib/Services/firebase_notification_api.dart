@@ -1,14 +1,17 @@
 import 'dart:async';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:prime_video/Screens/movie_description_page.dart';
+import 'package:prime_video/routes.dart';
 
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
 const AndroidNotificationChannel channel = AndroidNotificationChannel(
-  'my_channel', // id
+  'abcdefgh', // id
   'My Channel', // title
   description: 'Important notifications from my server.', // description
   importance: Importance.high,
@@ -32,46 +35,21 @@ var platform = NotificationDetails(android: android, iOS: ios);
 class NotificationApi {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
-  NotificationApi() {
-    flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
-        ?.createNotificationChannel(channel);
+  StreamSubscription<RemoteMessage>? _streamSubscriptionforForeground;
+
+  StreamSubscription<RemoteMessage>? get getStreamOfNotificaion =>
+      _streamSubscriptionforForeground;
+
+  StreamSubscription<RemoteMessage>? _streamSubscriptionforBackground;
+
+  StreamSubscription<RemoteMessage>? get getStreamOfNotificaionForbackground =>
+      _streamSubscriptionforBackground;
+
+  NotificationApi(context) {
+    initialize(context);
   }
 
-  Future firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-    print("Handling a background message: ${message.messageId}");
-    print("Handling a background message: ${message.notification}");
-    print("Handling a background message: ${message.data}");
-    try {
-      await flutterLocalNotificationsPlugin.show(
-        0,
-        message.notification!.title,
-        message.notification!.body,
-        platform,
-        payload: message.data.toString(),
-      );
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future getInitialMessages() async {
-    RemoteMessage? res = await FirebaseMessaging.instance.getInitialMessage();
-    print(res!.notification);
-  }
-
-  Future onbackgroundMessageClick() async {
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print("handler called app is opened");
-      print(message.notification!.body);
-    }, onError: (e) {
-      print(e);
-    });
-  }
-
-//Method for Notification recieved when app is in Foreround
-  Future getforegroundMessages() async {
+  initialize(context) async {
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
@@ -81,10 +59,49 @@ class NotificationApi {
       const InitializationSettings(
         android: AndroidInitializationSettings('@mipmap/ic_launcher'),
       ),
+      onSelectNotification: (str) {
+        Map map = str as Map;
+        Navigator.of(context).push(
+          createRoute(
+            MovieDescriptionScreen(
+              backdropposter: map['image'],
+              movieID: map['id'] as int,
+              moviename: map['name'],
+              description: map['description'],
+            ),
+          ),
+        );
+        print(map['MovieID']);
+        print("/////////////");
+        print(str);
+      },
     );
+  }
 
+  Future onbackgroundMessageClick(context) async {
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print("handler called app is opened");
+      Map map = message.data;
+      Navigator.of(context).push(
+        createRoute(
+          MovieDescriptionScreen(
+            backdropposter: map['image'],
+            movieID: int.parse(map['id']),
+            moviename: map['name'],
+            description: map['description'],
+          ),
+        ),
+      );
+      print(map['MovieID']);
+    }, onError: (e) {
+      print(e);
+    });
+  }
+
+//Method for Notification recieved when app is in Foreround
+  Future getforegroundMessages() async {
     try {
-      FirebaseMessaging.onMessage.listen(
+      _streamSubscriptionforForeground = FirebaseMessaging.onMessage.listen(
         (RemoteMessage message) async {
           final tempmessage = message;
           print(tempmessage);
@@ -99,6 +116,7 @@ class NotificationApi {
             );
             print(tempmessage.notification!.body);
             print(tempmessage.notification!.title);
+            print(tempmessage.data);
           } on PlatformException catch (e) {
             print(e);
           } catch (e) {
@@ -106,6 +124,44 @@ class NotificationApi {
           }
           print(tempmessage.notification!.body);
         },
+      );
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future getbackgroundNOtificaion() async {
+    FirebaseMessaging.onBackgroundMessage(
+      firebaseMessagingBackgroundHandler,
+    );
+  }
+
+  Future firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
+
+    await flutterLocalNotificationsPlugin.initialize(
+      const InitializationSettings(
+        android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+      ),
+      onSelectNotification: (str) {
+        print("/////////////");
+        print(str!);
+      },
+    );
+
+    print("Handling a background message: ${message.messageId}");
+    print("Handling a background message: ${message.notification}");
+    print("Handling a background message: ${message.data}");
+    try {
+      await flutterLocalNotificationsPlugin.show(
+        0,
+        message.notification!.title,
+        message.notification!.body,
+        platform,
+        payload: message.data.toString(),
       );
     } catch (e) {
       print(e);
