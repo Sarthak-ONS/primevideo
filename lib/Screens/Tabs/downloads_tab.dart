@@ -41,17 +41,20 @@ class _DownloadsTabState extends State<DownloadsTab> {
         titleSpacing: 3.0,
       ),
       body: Column(
-        children: [
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: const [
           Center(
-            child: TextButton(
-              onPressed: () async {
-                await DownloadApi().downloadAMovie(
-                    downloadMovieName: 'tesstingDownload',
-                    downloadMovieID: '123456');
-              },
-              child: Text('Downlload Checker'),
+            child: Text(
+              'Download feature will be implemented soon',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.w400,
+              ),
             ),
-          )
+          ),
         ],
       ),
     );

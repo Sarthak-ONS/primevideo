@@ -31,22 +31,18 @@ class TopRatedMedia extends StatelessWidget {
                         movieID: snapshot.data!.docs[index].get("id"),
                         moviename: snapshot.data!.docs[index].get("name"),
                         description: snapshot.data!.docs[index].get("overview"),
-                        index: index.toString(),
                       ),
                     ),
                   );
                 },
-                child: Hero(
-                  tag: '$index',
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5.0),
-                        color: PrimeColors.primaryColor),
-                    height: 150,
-                    padding: const EdgeInsets.symmetric(horizontal: 5),
-                    child: Image.network(
-                      snapshot.data!.docs[index].get("poster_path"),
-                    ),
+                child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5.0),
+                      color: PrimeColors.primaryColor),
+                  height: 150,
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  child: Image.network(
+                    snapshot.data!.docs[index].get("poster_path"),
                   ),
                 ),
               );
@@ -83,7 +79,6 @@ class RecommendedMedia extends StatelessWidget {
                         movieID: snapshot.data!.docs[index].get("id"),
                         moviename: snapshot.data!.docs[index].get("name"),
                         description: snapshot.data!.docs[index].get("overview"),
-                        index: index.toString(),
                       ),
                     ),
                   );
@@ -132,7 +127,6 @@ class UpcomingMedia extends StatelessWidget {
                         movieID: snapshot.data!.docs[index].get("id"),
                         moviename: snapshot.data!.docs[index].get("name"),
                         description: snapshot.data!.docs[index].get("overview"),
-                        index: index.toString(),
                       ),
                     ),
                   );
@@ -181,7 +175,6 @@ class NowPlaying extends StatelessWidget {
                         movieID: snapshot.data!.docs[index].get("id"),
                         moviename: snapshot.data!.docs[index].get("name"),
                         description: snapshot.data!.docs[index].get("overview"),
-                        index: index.toString(),
                       ),
                     ),
                   );
