@@ -11,14 +11,14 @@ FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
 const AndroidNotificationChannel channel = AndroidNotificationChannel(
-  'abcdefgh', // id
+  'high_importance_channel', // id
   'My Channel', // title
   description: 'Important notifications from my server.', // description
   importance: Importance.high,
 );
 
 var android = const AndroidNotificationDetails(
-  'abcdefgh',
+  'high_importance_channel',
   'main',
   channelDescription: 'CHANNEL DESCRIPTION',
   importance: Importance.max,
