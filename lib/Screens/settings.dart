@@ -79,10 +79,10 @@ class _SettingsState extends State<Settings> {
                   onChanged: (value) {
                     print("is Notification value : $value");
                     if (value!) {
-                      mySettings.changeNotificationOff(false);
+                      mySettings.changeNotificationOff(false, context);
                       return;
                     } else {
-                      mySettings.changeNotificationOff(true);
+                      mySettings.changeNotificationOff(true, context);
                       return;
                     }
                   },

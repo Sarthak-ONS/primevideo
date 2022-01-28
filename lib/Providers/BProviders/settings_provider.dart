@@ -22,9 +22,10 @@ class SettingsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  changeNotificationOff(bool? value) async {
+  changeNotificationOff(bool? value, context) async {
     await _sharedPreferences!.setBool("isNotificaionOff", value!);
     print("The value in Share Prefs for ChangeNotification oFf is $value");
+
     isNotificationOff = value;
     notifyListeners();
   }
@@ -33,6 +34,7 @@ class SettingsProvider extends ChangeNotifier {
     final currentStatusOfNotification =
         _sharedPreferences!.getBool('isNotificaionOff');
     print('The current Status of Notification is $currentStatusOfNotification');
+
     isNotificationOff = currentStatusOfNotification;
     notifyListeners();
   }
