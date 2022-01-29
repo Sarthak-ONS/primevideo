@@ -1,15 +1,13 @@
-import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:prime_video/Models/movie_model_hive.dart';
-import 'package:prime_video/Providers/BProviders/settings_provider.dart';
-import 'package:prime_video/Services/firebase_notification_api.dart';
+import 'package:prime_video/Providers/BProviders/save_movie_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:path_provider/path_provider.dart' as pathprovider;
 
+import 'dart:io';
+
+import 'package:path_provider/path_provider.dart' as pathprovider;
 import 'package:prime_video/Providers/BProviders/current_user_provider.dart';
 import 'package:prime_video/Providers/BProviders/trending_provider.dart';
 import 'package:prime_video/Providers/UIProviders/bottom_navbar_provider.dart';
@@ -17,46 +15,20 @@ import 'package:prime_video/Providers/UIProviders/custom_checkbox_provider.dart'
 import 'package:prime_video/Screens/home_screen.dart';
 import 'package:prime_video/Screens/login_screen.dart';
 
+import 'Models/movie_model_hive.dart';
+import 'private_variable.dart';
+
 Future main() async {
   print("Restarting the complete the app");
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
   Directory directory = await pathprovider.getApplicationDocumentsDirectory();
-
   print(directory.path);
   Hive.init(directory.path);
   Hive.registerAdapter(HiveMovieModelAdapter());
-  await Hive.openBox<HiveMovieModel>('hiveMoviesForDownloads');
+  box = await Hive.openBox<HiveMovieModel>('continuewatching');
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
-
-// class App extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return FutureBuilder(
-//       // Initialize FlutterFire
-//       future: Firebase.initializeApp(),
-//       builder: (context, snapshot) {
-//         // Check for errors
-//         if (snapshot.hasError) {
-//           return Center(
-//             child: Text('Please try again later'),
-//           );
-//         }
-
-//         // Once complete, show your application
-//         if (snapshot.connectionState == ConnectionState.done) {
-//           return MyApp();
-//         }
-
-//         // Otherwise, show something whilst waiting for initialization to complete
-//         return const Center(
-//           child: CircularProgressIndicator(),
-//         );
-//       },
-//     );
-//   }
-// }
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -77,6 +49,9 @@ class MyApp extends StatelessWidget {
         ListenableProvider(
           create: (_) => MovieProvider(),
         ),
+        ChangeNotifierProvider(
+          create: (_) => MovieStateProvider(),
+        )
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

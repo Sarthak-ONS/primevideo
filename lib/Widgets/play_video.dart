@@ -1,9 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:prime_video/Models/movie_model_hive.dart';
+import 'package:prime_video/Providers/BProviders/save_movie_provider.dart';
 import 'package:prime_video/Services/movie_streaming.dart';
+import 'package:prime_video/private_variable.dart';
+import 'package:provider/provider.dart';
 import 'package:vdocipher_flutter/vdocipher_flutter.dart';
 
 class VdoPlaybackView extends StatefulWidget {
-  const VdoPlaybackView({Key? key}) : super(key: key);
+  VdoPlaybackView({
+    Key? key,
+    this.movieID,
+    this.title,
+    this.description,
+    this.backdropPoster,
+    this.posterpath,
+    this.duration = const Duration(seconds: 0),
+  }) : super(key: key);
+
+  final String? movieID;
+  final String? title;
+  final String? description;
+  final String? backdropPoster;
+  final String? posterpath;
+  Duration? duration;
 
   @override
   _VdoPlaybackViewState createState() => _VdoPlaybackViewState();
@@ -26,8 +45,39 @@ class _VdoPlaybackViewState extends State<VdoPlaybackView> {
     super.dispose();
   }
 
+  Future addMovieToContinueWatching({
+    String? id,
+    String? title,
+    Duration? duration,
+    String? description,
+    String? backdropPath,
+  }) async {
+    HiveMovieModel hiveMovieModel = HiveMovieModel()
+      ..id = id
+      ..title = title
+      ..duration = duration!.inSeconds
+      ..description = description
+      ..backdropPath = backdropPath
+      ..movieID = id;
+
+    await box?.put(id!, hiveMovieModel);
+  }
+
   Future savePosition() async {
     Duration duration = await _controller!.getPosition();
+    if (duration.inSeconds == 0) return;
+
+    addMovieToContinueWatching(
+      id: Provider.of<MovieStateProvider>(context, listen: false).movieID,
+      title: Provider.of<MovieStateProvider>(context, listen: false).title,
+      duration:
+          Provider.of<MovieStateProvider>(context, listen: false).saveDuration,
+      description:
+          Provider.of<MovieStateProvider>(context, listen: false).description,
+      backdropPath: widget.backdropPoster,
+    );
+    Provider.of<MovieStateProvider>(context, listen: false)
+        .saveDurationForCurrentMovie(duration);
     print("The position where user left is ${duration.inSeconds}");
   }
 
@@ -44,7 +94,12 @@ class _VdoPlaybackViewState extends State<VdoPlaybackView> {
                       child: CircularProgressIndicator(),
                     )
                   : VdoPlayer(
-                      embedInfo: _embedInfo!,
+                      embedInfo: EmbedInfo.streaming(
+                          otp: _embedInfo!.otp!,
+                          playbackInfo: _embedInfo!.playbackInfo!,
+                          embedInfoOptions: EmbedInfoOptions(
+                            resumePosition: widget.duration,
+                          )),
                       onPlayerCreated: (controller) {
                         _onPlayerCreated(controller);
                       },

@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:prime_video/Models/movie_model.dart';
-import 'package:prime_video/Services/download_movie.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:prime_video/Models/movie_model_hive.dart';
+import 'package:prime_video/Services/save_movie_conti.dart';
 import 'package:prime_video/Widgets/custom_spacer.dart';
 import 'package:prime_video/Widgets/media_prime.dart';
+import 'package:prime_video/Widgets/play_video.dart';
 import 'package:prime_video/Widgets/trending_media.dart';
 import 'package:prime_video/prime_colors.dart';
+import 'package:prime_video/routes.dart';
 import 'package:tmdb_api/tmdb_api.dart';
 
 import '../../private_variable.dart';
@@ -28,54 +32,46 @@ class _HomeTabState extends State<HomeTab> {
         showInfoLogs: true,
       ),
     );
-    final res = await _tmdb!.v3.movies.getSimilar(14072);
+    final res = await _tmdb!.v3.tv.getLatest(language: 'hi');
 
-    final moviesListFromServer = res['results'];
+    final moviesListFromServer = res['seasons'];
 
-    for (int i = 0; i < moviesListFromServer.length; i++) {
-      _movieListsForTrending.add(
-        movielModel.fromJson(moviesListFromServer[i]),
-      );
-    }
-    print(moviesListFromServer.length);
+    final temp = res;
+
+    // for (int i = 0; i < moviesListFromServer.length; i++) {
+    //   _movieListsForTrending.add(
+    //     movielModel.fromJson(moviesListFromServer[i]),
+    //   );
+    // }
+    print(temp);
+
+    print(moviesListFromServer);
   }
 
-  final List<movielModel> _movieListsForTrending = [];
+  final List _movieListsForTrending = [];
+
+  initiateBoxes() async {
+    box = await Hive.openBox<HiveMovieModel>('continuewatching');
+  }
 
   @override
   void initState() {
     //loadMovies();
+    initiateBoxes();
     super.initState();
   }
+
+  Future addMovieToContinueWatching() async {}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: PrimeColors.primaryColor,
       floatingActionButton: FloatingActionButton(onPressed: () async {
-        DownloadApi().downloadAMovie(
-            downloadMovieName: 'Sarah', downloadMovieID: '12345');
-        // _movieListsForTrending.clear();
-        // for (var item in _movieListsForTrending) {
-        //   FirebaseFirestore.instance.collection('Now Playing').add(
-        //     {
-        //       "id": item.id,
-        //       "name": item.title,
-        //       "originallanguage": item.originalLanguage,
-        //       "overview": item.overview,
-        //       "isAdult": item.adult,
-        //       "backdrop_path":
-        //           "https://image.tmdb.org/t/p/w500${item.backdropPath}",
-        //       "poster_path":
-        //           "https://image.tmdb.org/t/p/w500${item.posterPath}",
-        //       "populartity": item.popularity,
-        //       "rating": item.voteAverage,
-        //       "release_date": item.releaseDate,
-        //       "media_type": item.mediaType,
-        //       "movie_cast_link": ""
-        //     },
-        //   );
-        // }
+        // final box = Boxes.getContinueWatching();
+        // box.add(HiveMovieModel());
+
+        // loadMovies();
       }),
       body: ListView(
         padding: const EdgeInsets.symmetric(
@@ -88,9 +84,88 @@ class _HomeTabState extends State<HomeTab> {
             height: 210,
             child: TrendingMovies(),
           ),
-          //TODO: For Continue Watching
-          //// Container For Top Rated
+          // For Continue Watching
+          //
+          SizedBox(
+            height: 220,
+            child: Container(
+              margin: const EdgeInsets.only(top: 15.0),
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              color: PrimeColors.primaryColor,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Continue Watching',
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontFamily: 'Poppins',
+                        color: Colors.white),
+                  ),
+                  buildHeightSizedBox(height: 4),
+                  SizedBox(
+                    height: 170,
+                    child: ValueListenableBuilder<Box<HiveMovieModel>>(
+                      valueListenable: Boxes.getContinueWatching().listenable(),
+                      builder: (context, box, _) {
+                        final movies =
+                            box.values.toList().cast<HiveMovieModel>();
 
+                        if (movies.isEmpty) {
+                          return Container(
+                            padding: const EdgeInsets.all(15.0),
+                            child: const Center(
+                              child: Text(
+                                'Watch Something',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 16),
+                              ),
+                            ),
+                          );
+                        }
+
+                        return ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: movies.length,
+                          itemBuilder: (context, index) => GestureDetector(
+                            onTap: () {
+                              print(movies[index]);
+                              Navigator.of(context).push(
+                                createRoute(
+                                  VdoPlaybackView(
+                                    movieID: movies[index].movieID,
+                                    description: movies[index].description,
+                                    backdropPoster: movies[index].backdropPath,
+                                    duration: Duration(
+                                        seconds: movies[index].duration!),
+                                    posterpath: movies[index].backdropPath,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  color: PrimeColors.primaryColor),
+                              height: 150,
+                              width: 100,
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 5),
+                              child: Image.network(
+                                movies[index].backdropPath!,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+          //// Container For Top Rated
           Container(
             padding: const EdgeInsets.only(left: 5),
             child: Column(
@@ -234,3 +309,30 @@ class _HomeTabState extends State<HomeTab> {
     );
   }
 }
+
+
+// DownloadApi().downloadAMovie(
+//     downloadMovieName: 'Sarah', downloadMovieID: '12345');
+
+// _movieListsForTrending.clear();
+// for (var item in _movieListsForTrending) {
+//   FirebaseFirestore.instance.collection('Now Playing').add(
+//     {
+//       "id": item.id,
+//       "name": item.title,
+//       "originallanguage": item.originalLanguage,
+//       "overview": item.overview,
+//       "isAdult": item.adult,
+//       "backdrop_path":
+//           "https://image.tmdb.org/t/p/w500${item.backdropPath}",
+//       "poster_path":
+//           "https://image.tmdb.org/t/p/w500${item.posterPath}",
+//       "populartity": item.popularity,
+//       "rating": item.voteAverage,
+//       "release_date": item.releaseDate,
+//       "media_type": item.mediaType,
+//       "movie_cast_link": ""
+//     },
+//   );
+// }
+

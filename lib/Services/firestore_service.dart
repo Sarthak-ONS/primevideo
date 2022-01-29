@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
+import 'package:prime_video/private_variable.dart';
 
 class FirebaseFirestoreApi {
   final CollectionReference _firebaseFirestore =
@@ -56,7 +56,8 @@ class FirebaseFirestoreApi {
         "tagline": tagline,
         "duration": duration,
         "release_date": date,
-        "docID": ""
+        "docID": "",
+        "loginTokens": []
       });
 
       _firebaseFirestore
@@ -132,6 +133,37 @@ class FirebaseFirestoreApi {
       }
     } catch (e) {
       print("Eror From checkifMovieisAlreadyWatchListed");
+    }
+  }
+
+  Future saveCurrentUserTokenttoDatabase(String encryptedToken) async {
+    try {
+      _firebaseFirestore.doc(_firebaseAuth.currentUser!.uid).update(
+        {
+          "loginTokens": FieldValue.arrayUnion([encryptedToken]),
+        },
+      );
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future checkTokens() async {
+    _firebaseAuth.currentUser!.getIdTokenResult();
+    try {
+      DocumentSnapshot snapshot =
+          await _firebaseFirestore.doc(_firebaseAuth.currentUser!.uid).get();
+
+      final loginTokenLength = await snapshot.get("loginTokens").length;
+
+      if (loginTokenLength > 1) {
+        return "More Logins";
+      } else {
+        return "Go Login";
+      }
+    } catch (e) {
+      print("Eror Checking Tokens");
+      print(e);
     }
   }
 }

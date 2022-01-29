@@ -46,6 +46,7 @@ dependencies:
   encrypt: ^5.0.1
   vdocipher_flutter: ^1.0.0-beta.4
   flutter_local_notifications: ^9.2.0
+  device_info_plus: ^3.2.1
   shared_preferences: 
 
 

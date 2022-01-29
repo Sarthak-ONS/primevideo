@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:prime_video/Models/movie_model_hive.dart';
 import 'package:prime_video/Models/single_movie_model.dart';
+import 'package:prime_video/Providers/BProviders/save_movie_provider.dart';
 import 'package:prime_video/Providers/BProviders/trending_provider.dart';
 import 'package:prime_video/Services/firebase_dynamic_link_api.dart';
 import 'package:prime_video/Services/firestore_service.dart';
@@ -74,10 +75,14 @@ class _MovieDescriptionScreenState extends State<MovieDescriptionScreen> {
     print(reult);
   }
 
+  initiateBoxes() async {
+    box = await Hive.openBox<HiveMovieModel>('continuewatching');
+  }
+
   @override
   void initState() {
     super.initState();
-
+    initiateBoxes();
     checkIdMovieIsAlreadyWatchListed();
   }
 
@@ -85,10 +90,11 @@ class _MovieDescriptionScreenState extends State<MovieDescriptionScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        floatingActionButton: FloatingActionButton(
+        floatingActionButton: FloatingActionButton.extended(
+          label: Text('Add to Continue Watching'),
           onPressed: () async {
-            print("Movie");
-            //Set the playbackId to "" for all Document.
+            print(box?.get("496243"));
+            print(widget.movieID);
           },
         ),
         backgroundColor: PrimeColors.primaryColor,
@@ -150,9 +156,23 @@ class _MovieDescriptionScreenState extends State<MovieDescriptionScreen> {
                             ),
                             buildPrimaryButton(
                               () {
+                                Provider.of<MovieStateProvider>(context,
+                                        listen: false)
+                                    .changeMovieStateForContinueWatching(
+                                        movieID: widget.movieID.toString(),
+                                        backdropPath: widget.backdropposter,
+                                        title: widget.moviename,
+                                        description: widget.description,
+                                        posterPath: widget.backdropposter);
                                 Navigator.of(context).push(
                                   createRoute(
-                                    const VdoPlaybackView(),
+                                    VdoPlaybackView(
+                                      movieID: widget.movieID.toString(),
+                                      description: widget.description,
+                                      backdropPoster: widget.backdropposter,
+                                      posterpath: widget.backdropposter,
+                                      title: widget.moviename,
+                                    ),
                                   ),
                                 );
                               },
@@ -176,6 +196,18 @@ class _MovieDescriptionScreenState extends State<MovieDescriptionScreen> {
                                     title: 'Trailer',
                                     callback: () {
                                       print("Playing trailer");
+                                      Navigator.of(context).push(
+                                        createRoute(
+                                          VdoPlaybackView(
+                                            movieID: widget.movieID.toString(),
+                                            description: widget.description,
+                                            backdropPoster:
+                                                widget.backdropposter,
+                                            posterpath: widget.backdropposter,
+                                            title: widget.moviename,
+                                          ),
+                                        ),
+                                      );
                                     },
                                   ),
                                   MovieDescriptionControlWidget(

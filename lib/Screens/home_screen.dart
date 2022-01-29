@@ -1,6 +1,6 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:prime_video/Models/movie_model_hive.dart';
 import 'package:prime_video/Providers/UIProviders/bottom_navbar_provider.dart';
 import 'package:prime_video/Screens/Tabs/downloads_tab.dart';
 import 'package:prime_video/Screens/Tabs/home_tab.dart';
@@ -12,7 +12,6 @@ import 'package:prime_video/Services/firebase_notification_api.dart';
 import 'package:prime_video/prime_colors.dart';
 import 'package:prime_video/routes.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -55,9 +54,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {},
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () async {},
+      // ),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: PrimeColors.primaryColor,

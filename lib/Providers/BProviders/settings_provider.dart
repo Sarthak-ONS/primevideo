@@ -44,3 +44,7 @@ class SettingsProvider extends ChangeNotifier {
     notifyListeners();
   }
 }
+
+
+/// For turning on and off the notification we can check whether notification are paused by the user, 
+/// if notificaition are paused then don't show notification using the plugin else show.
