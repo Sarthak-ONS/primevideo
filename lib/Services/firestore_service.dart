@@ -44,21 +44,24 @@ class FirebaseFirestoreApi {
       String backdroppath, String overview, String duration, String date,
       {String? tagline = ""}) async {
     try {
+      final res = await _firebaseAuth.currentUser!.getIdTokenResult();
       DocumentReference ref = await _firebaseFirestore
           .doc(_firebaseAuth.currentUser!.uid)
           .collection('Watchlist')
-          .add({
-        "id": movieID,
-        "name": name,
-        "poster_path": posterpath,
-        "backdrop_path": backdroppath,
-        "overview": overview,
-        "tagline": tagline,
-        "duration": duration,
-        "release_date": date,
-        "docID": "",
-        "loginTokens": []
-      });
+          .add(
+        {
+          "id": movieID,
+          "name": name,
+          "poster_path": posterpath,
+          "backdrop_path": backdroppath,
+          "overview": overview,
+          "tagline": tagline,
+          "duration": duration,
+          "release_date": date,
+          "docID": "",
+          "loginTokens": res.token
+        },
+      );
 
       _firebaseFirestore
           .doc(_firebaseAuth.currentUser!.uid)

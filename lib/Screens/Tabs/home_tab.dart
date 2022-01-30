@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:prime_video/Models/movie_model_hive.dart';
+import 'package:prime_video/Services/multiple_login_service.dart';
 import 'package:prime_video/Services/save_movie_conti.dart';
 import 'package:prime_video/Widgets/custom_spacer.dart';
 import 'package:prime_video/Widgets/media_prime.dart';
@@ -68,6 +68,7 @@ class _HomeTabState extends State<HomeTab> {
     return Scaffold(
       backgroundColor: PrimeColors.primaryColor,
       floatingActionButton: FloatingActionButton(onPressed: () async {
+        CheckForMultiPleLogins().checkNoofTokensinDatabase();
         // final box = Boxes.getContinueWatching();
         // box.add(HiveMovieModel());
 
@@ -124,40 +125,7 @@ class _HomeTabState extends State<HomeTab> {
                           );
                         }
 
-                        return ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: movies.length,
-                          itemBuilder: (context, index) => GestureDetector(
-                            onTap: () {
-                              print(movies[index]);
-                              Navigator.of(context).push(
-                                createRoute(
-                                  VdoPlaybackView(
-                                    movieID: movies[index].movieID,
-                                    description: movies[index].description,
-                                    backdropPoster: movies[index].backdropPath,
-                                    duration: Duration(
-                                        seconds: movies[index].duration!),
-                                    posterpath: movies[index].backdropPath,
-                                  ),
-                                ),
-                              );
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                  color: PrimeColors.primaryColor),
-                              height: 150,
-                              width: 100,
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 5),
-                              child: Image.network(
-                                movies[index].backdropPath!,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                        );
+                        return buildContinueWatchingCard(movies);
                       },
                     ),
                   )
@@ -305,6 +273,41 @@ class _HomeTabState extends State<HomeTab> {
 
           //
         ],
+      ),
+    );
+  }
+
+  ListView buildContinueWatchingCard(List<HiveMovieModel> movies) {
+    return ListView.builder(
+      scrollDirection: Axis.horizontal,
+      itemCount: movies.length,
+      itemBuilder: (context, index) => GestureDetector(
+        onTap: () {
+          print(movies[index]);
+          Navigator.of(context).push(
+            createRoute(
+              VdoPlaybackView(
+                movieID: movies[index].movieID,
+                description: movies[index].description,
+                backdropPoster: movies[index].backdropPath,
+                duration: Duration(seconds: movies[index].duration!),
+                posterpath: movies[index].backdropPath,
+              ),
+            ),
+          );
+        },
+        child: Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5.0),
+              color: PrimeColors.primaryColor),
+          height: 150,
+          width: 130,
+          padding: const EdgeInsets.symmetric(horizontal: 5),
+          child: Image.network(
+            movies[index].backdropPath!,
+            fit: BoxFit.cover,
+          ),
+        ),
       ),
     );
   }

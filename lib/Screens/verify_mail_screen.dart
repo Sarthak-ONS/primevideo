@@ -96,17 +96,20 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                 selectedFieldDecoration: kboxDecoration,
                 submittedFieldDecoration: kboxDecoration,
                 followingFieldDecoration: kboxDecoration,
-                onSubmit: (str) {
-                  print("/////////");
-                  if (str == SendEmailVerificationMail.otp.toString()) {
-                    print("Email Is Verified");
-                    Navigator.of(context).push(
-                      createRoute(
-                        const HomeScreen(),
-                      ),
-                    );
+                onSubmit: (str) async {
+                  if (_otpController!.text ==
+                      SendEmailVerificationMail.otp.toString()) {
+                    print("OTP is Verified");
+                    await FirebaseFirestoreApi().createProfileInDatabase(
+                        FirebaseAuth.instance.currentUser!.uid);
+
+                    //Go to Home Page
+                    Navigator.of(context).pushAndRemoveUntil(
+                        createRoute(
+                          const HomeScreen(),
+                        ),
+                        ModalRoute.withName(""));
                   }
-                  print(str);
                 },
                 onEditingComplete: () {
                   print("Editing Completed");
