@@ -26,12 +26,14 @@ class FirebaseFirestoreApi {
     if (await checkIfProfileIsAlreadyPresent(userID!)) return;
 
     try {
+      final res = await _firebaseAuth.currentUser!.getIdTokenResult();
       _firebaseFirestore.doc(userID).set(
         {
           "name": _firebaseAuth.currentUser!.displayName,
           "email": _firebaseAuth.currentUser!.email,
           "photoUrl": _firebaseAuth.currentUser!.photoURL,
           "isUserVerified": true,
+          "loginTokens": res.token
         },
       ).then((value) => print("Successfully Created user Profile"));
     } catch (e) {
@@ -44,7 +46,6 @@ class FirebaseFirestoreApi {
       String backdroppath, String overview, String duration, String date,
       {String? tagline = ""}) async {
     try {
-      final res = await _firebaseAuth.currentUser!.getIdTokenResult();
       DocumentReference ref = await _firebaseFirestore
           .doc(_firebaseAuth.currentUser!.uid)
           .collection('Watchlist')
@@ -59,7 +60,6 @@ class FirebaseFirestoreApi {
           "duration": duration,
           "release_date": date,
           "docID": "",
-          "loginTokens": res.token
         },
       );
 

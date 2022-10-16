@@ -4,9 +4,9 @@ import '../global_variable.dart';
 
 class AuthInputsValidation {
   //Validator For Email with Show SnackBar
-  static validateEmail(String value, BuildContext context) {
+  static validateEmail(String email, BuildContext context) {
     RegExp regex = RegExp(pattern);
-    if (regex.hasMatch(value) == false) {
+    if (regex.hasMatch(email) == false) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Invalid Email'),
@@ -17,7 +17,7 @@ class AuthInputsValidation {
       );
       return;
     }
-    return (!regex.hasMatch(value)) ? false : true;
+    return (!regex.hasMatch(email)) ? false : true;
   }
 
   static validatePassword(String password, BuildContext context) {

@@ -91,7 +91,7 @@ class _MovieDescriptionScreenState extends State<MovieDescriptionScreen> {
     return SafeArea(
       child: Scaffold(
         floatingActionButton: FloatingActionButton.extended(
-          label: Text('Add to Continue Watching'),
+          label: const Text('Add to Continue Watching'),
           onPressed: () async {
             print(box?.get("496243"));
             print(widget.movieID);
@@ -122,258 +122,253 @@ class _MovieDescriptionScreenState extends State<MovieDescriptionScreen> {
                   );
                 }
 
-                return SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      //Container For Poster
-                      Container(
-                        height: MediaQuery.of(context).size.height * 0.30,
-                        color: PrimeColors.primaryColor,
-                        child: Image.network(
-                          widget.backdropposter!,
-                          fit: BoxFit.cover,
-                        ),
+                return ListView(
+                  physics: const BouncingScrollPhysics(),
+                  children: [
+                    //Container For Poster
+                    Container(
+                      height: MediaQuery.of(context).size.height * 0.30,
+                      color: PrimeColors.primaryColor,
+                      child: Image.network(
+                        widget.backdropposter!,
+                        fit: BoxFit.cover,
                       ),
+                    ),
 
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: ListView(
-                          shrinkWrap: true,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8.0,
-                                vertical: 15.0,
-                              ),
-                              child: Text(
-                                widget.moviename!,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 30,
-                                ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      child: ListView(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0,
+                              vertical: 15.0,
+                            ),
+                            child: Text(
+                              widget.moviename!,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 30,
                               ),
                             ),
-                            buildPrimaryButton(
-                              () {
-                                Provider.of<MovieStateProvider>(context,
-                                        listen: false)
-                                    .changeMovieStateForContinueWatching(
-                                        movieID: widget.movieID.toString(),
-                                        backdropPath: widget.backdropposter,
-                                        title: widget.moviename,
-                                        description: widget.description,
-                                        posterPath: widget.backdropposter);
-                                Navigator.of(context).push(
-                                  createRoute(
-                                    VdoPlaybackView(
+                          ),
+                          buildPrimaryButton(
+                            () {
+                              Provider.of<MovieStateProvider>(context,
+                                      listen: false)
+                                  .changeMovieStateForContinueWatching(
                                       movieID: widget.movieID.toString(),
-                                      description: widget.description,
-                                      backdropPoster: widget.backdropposter,
-                                      posterpath: widget.backdropposter,
+                                      backdropPath: widget.backdropposter,
                                       title: widget.moviename,
-                                    ),
+                                      description: widget.description,
+                                      posterPath: widget.backdropposter);
+                              Navigator.of(context).push(
+                                createRoute(
+                                  VdoPlaybackView(
+                                    movieID: widget.movieID.toString(),
+                                    description: widget.description,
+                                    backdropPoster: widget.backdropposter,
+                                    posterpath: widget.backdropposter,
+                                    title: widget.moviename,
                                   ),
-                                );
-                              },
-                              'Watch Now',
-                              color: PrimeColors.primaryBlueColor,
-                              isWatchNow: true,
-                            )
-                            //Trailer Download WatchList Share
-                            ,
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 20,
-                                horizontal: 10.0,
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  MovieDescriptionControlWidget(
-                                    icons: Icons.play_circle_fill_outlined,
-                                    title: 'Trailer',
-                                    callback: () {
-                                      print("Playing trailer");
-                                      Navigator.of(context).push(
-                                        createRoute(
-                                          VdoPlaybackView(
-                                            movieID: widget.movieID.toString(),
-                                            description: widget.description,
-                                            backdropPoster:
-                                                widget.backdropposter,
-                                            posterpath: widget.backdropposter,
-                                            title: widget.moviename,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                  MovieDescriptionControlWidget(
-                                    icons: Icons.download_for_offline,
-                                    title: 'Download',
-                                    callback: () {
-                                      print("Initiating Downlod Fot the movie");
-                                      print(snapshot.data!
-                                          .get("belongs_to_collection"));
-                                    },
-                                  ),
-                                  MovieDescriptionControlWidget(
-                                    icons: isWatchListed!
-                                        ? Icons.done_all_outlined
-                                        : Icons.watch_later_outlined,
-                                    title: isWatchListed!
-                                        ? "WatchListed"
-                                        : 'Watchlist',
-                                    bordercolor: isWatchListed!
-                                        ? PrimeColors.primaryBlueColor
-                                        : Colors.grey,
-                                    iconColor: isWatchListed!
-                                        ? Colors.white
-                                        : Colors.white,
-                                    callback: () async {
-                                      if (isWatchListed!) return;
-                                      await FirebaseFirestoreApi()
-                                          .addMovietoWatchList(
-                                        widget.movieID.toString(),
-                                        widget.moviename!,
-                                        widget.backdropposter!,
-                                        widget.backdropposter!,
-                                        widget.description!,
-                                        snapshot.data!.get("release_date"),
-                                        snapshot.data!
-                                            .get("duration")
-                                            .toString(),
-                                      );
-                                      checkIdMovieIsAlreadyWatchListed();
-                                      setState(() {});
-                                    },
-                                  ),
-                                  MovieDescriptionControlWidget(
-                                    icons: Icons.share,
-                                    title: 'Share',
-                                    callback: () async {
-                                      final res = await FirebaseDynamicLinkApi()
-                                          .createDynmicLink(
-                                        movieID: widget.movieID.toString(),
-                                        description: widget.description!,
-                                        imageUrl: widget.backdropposter!,
-                                        movieName: widget.moviename!,
-                                      );
-                                      Share.share(
-                                        res.toString(),
-                                        sharePositionOrigin: Rect.fromCenter(
-                                            center: const Offset(0.5, 0.5),
-                                            width: 50,
-                                            height: 50),
-                                      );
-                                      print(res);
-                                    },
-                                  ),
-                                ],
-                              ),
-                            )
-                            //
-                            ,
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8.0,
-                              ),
-                              child: Text(
-                                widget.description!,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14,
                                 ),
-                              ),
+                              );
+                            },
+                            'Watch Now',
+                            color: PrimeColors.primaryBlueColor,
+                            isWatchNow: true,
+                          )
+                          //Trailer Download WatchList Share
+                          ,
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 20,
+                              horizontal: 10.0,
                             ),
-                            buildHeightSizedBox(height: 15),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8.0),
-                              child:
-                                  snapshot.data!.get("release_date") == null ||
-                                          snapshot.data!.get("duration") == null
-                                      ? const Text("")
-                                      : Text(
-                                          '${snapshot.data!.get("release_date").toString().substring(0, 4)}, ${snapshot.data!.get("duration")}min,',
-                                          style: TextStyle(
-                                            color: PrimeColors.primaryBlueColor
-                                                .withOpacity(0.8),
-                                            fontWeight: FontWeight.w500,
-                                            fontFamily: 'Poppins',
-                                            fontSize: 15,
-                                          ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                MovieDescriptionControlWidget(
+                                  icons: Icons.play_circle_fill_outlined,
+                                  title: 'Trailer',
+                                  callback: () {
+                                    print("Playing trailer");
+                                    Navigator.of(context).push(
+                                      createRoute(
+                                        VdoPlaybackView(
+                                          movieID: widget.movieID.toString(),
+                                          description: widget.description,
+                                          backdropPoster: widget.backdropposter,
+                                          posterpath: widget.backdropposter,
+                                          title: widget.moviename,
                                         ),
-                            ),
-                            buildHeightSizedBox(height: 5),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8.0),
-                              child: snapshot.data!.get("ratings") == null
-                                  ? const Text("")
-                                  : Text(
-                                      'Ratings:  ${snapshot.data!.get("ratings")}',
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontFamily: 'Poppins',
-                                        fontSize: 15,
                                       ),
-                                    ),
-                            ),
-                            buildHeightSizedBox(height: 25),
-                            const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 8.0),
-                              child: Text(
-                                'Genre',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 15,
+                                    );
+                                  },
                                 ),
+                                MovieDescriptionControlWidget(
+                                  icons: Icons.download_for_offline,
+                                  title: 'Download',
+                                  callback: () {
+                                    print("Initiating Downlod Fot the movie");
+                                    print(snapshot.data!
+                                        .get("belongs_to_collection"));
+                                  },
+                                ),
+                                MovieDescriptionControlWidget(
+                                  icons: isWatchListed!
+                                      ? Icons.done_all_outlined
+                                      : Icons.watch_later_outlined,
+                                  title: isWatchListed!
+                                      ? "WatchListed"
+                                      : 'Watchlist',
+                                  bordercolor: isWatchListed!
+                                      ? PrimeColors.primaryBlueColor
+                                      : Colors.grey,
+                                  iconColor: isWatchListed!
+                                      ? Colors.white
+                                      : Colors.white,
+                                  callback: () async {
+                                    if (isWatchListed!) return;
+                                    await FirebaseFirestoreApi()
+                                        .addMovietoWatchList(
+                                      widget.movieID.toString(),
+                                      widget.moviename!,
+                                      widget.backdropposter!,
+                                      widget.backdropposter!,
+                                      widget.description!,
+                                      snapshot.data!.get("release_date"),
+                                      snapshot.data!.get("duration").toString(),
+                                    );
+                                    checkIdMovieIsAlreadyWatchListed();
+                                    setState(() {});
+                                  },
+                                ),
+                                MovieDescriptionControlWidget(
+                                  icons: Icons.share,
+                                  title: 'Share',
+                                  callback: () async {
+                                    final res = await FirebaseDynamicLinkApi()
+                                        .createDynmicLink(
+                                      movieID: widget.movieID.toString(),
+                                      description: widget.description!,
+                                      imageUrl: widget.backdropposter!,
+                                      movieName: widget.moviename!,
+                                    );
+                                    Share.share(
+                                      res.toString(),
+                                      sharePositionOrigin: Rect.fromCenter(
+                                          center: const Offset(0.5, 0.5),
+                                          width: 50,
+                                          height: 50),
+                                    );
+                                    print(res);
+                                  },
+                                ),
+                              ],
+                            ),
+                          )
+                          //
+                          ,
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0,
+                            ),
+                            child: Text(
+                              widget.description!,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
                               ),
                             ),
-                            snapshot.data!.get("genre") == null
-                                ? Container()
-                                : Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0),
-                                    child: SizedBox(
-                                      height: 50,
-                                      child: ListView.builder(
-                                        scrollDirection: Axis.horizontal,
-                                        itemCount:
-                                            snapshot.data!.get("genre").length,
-                                        itemBuilder: (_, index) {
-                                          return snapshot.data!
-                                                      .get("genre")[index] ==
-                                                  null
-                                              ? const Text("")
-                                              : Text(
-                                                  '${snapshot.data!.get("genre")[index]}, ',
-                                                  style: const TextStyle(
-                                                    color: Colors.white,
-                                                  ),
-                                                );
-                                        },
-                                      ),
+                          ),
+                          buildHeightSizedBox(height: 15),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: snapshot.data!.get("release_date") == null ||
+                                    snapshot.data!.get("duration") == null
+                                ? const Text("")
+                                : Text(
+                                    '${snapshot.data!.get("release_date").toString().substring(0, 4)}, ${snapshot.data!.get("duration")}min,',
+                                    style: TextStyle(
+                                      color: PrimeColors.primaryBlueColor
+                                          .withOpacity(0.8),
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: 'Poppins',
+                                      fontSize: 15,
                                     ),
                                   ),
-                            snapshot.data!.get("belongs_to_collection") == null
-                                ? Container()
-                                : buildCollectionContainer(
-                                    snapshot.data!.get(
-                                        "belongs_to_collection")['poster_path'],
-                                    snapshot.data!
-                                        .get("belongs_to_collection")['name'])
-                          ],
-                        ),
+                          ),
+                          buildHeightSizedBox(height: 5),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: snapshot.data!.get("ratings") == null
+                                ? const Text("")
+                                : Text(
+                                    'Ratings:  ${snapshot.data!.get("ratings")}',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: 'Poppins',
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                          ),
+                          buildHeightSizedBox(height: 25),
+                          const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Text(
+                              'Genre',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ),
+                          snapshot.data!.get("genre") == null
+                              ? Container()
+                              : Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: SizedBox(
+                                    height: 50,
+                                    child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount:
+                                          snapshot.data!.get("genre").length,
+                                      itemBuilder: (_, index) {
+                                        return snapshot.data!
+                                                    .get("genre")[index] ==
+                                                null
+                                            ? const Text("")
+                                            : Text(
+                                                '${snapshot.data!.get("genre")[index]}, ',
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                              );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                          snapshot.data!.get("belongs_to_collection") == null
+                              ? Container()
+                              : buildCollectionContainer(
+                                  snapshot.data!.get(
+                                      "belongs_to_collection")['poster_path'],
+                                  snapshot.data!
+                                      .get("belongs_to_collection")['name'])
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 );
               },
             ),

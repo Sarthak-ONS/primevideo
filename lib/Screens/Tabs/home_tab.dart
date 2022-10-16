@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:prime_video/Models/movie_model_hive.dart';
@@ -12,6 +13,7 @@ import 'package:prime_video/routes.dart';
 import 'package:tmdb_api/tmdb_api.dart';
 
 import '../../private_variable.dart';
+import '../movie_description_page.dart';
 
 class HomeTab extends StatefulWidget {
   const HomeTab({Key? key}) : super(key: key);
@@ -68,7 +70,7 @@ class _HomeTabState extends State<HomeTab> {
     return Scaffold(
       backgroundColor: PrimeColors.primaryColor,
       floatingActionButton: FloatingActionButton(onPressed: () async {
-        CheckForMultiPleLogins().checkNoofTokensinDatabase();
+        FirebaseAuth.instance.signOut();
         // final box = Boxes.getContinueWatching();
         // box.add(HiveMovieModel());
 
@@ -286,12 +288,11 @@ class _HomeTabState extends State<HomeTab> {
           print(movies[index]);
           Navigator.of(context).push(
             createRoute(
-              VdoPlaybackView(
-                movieID: movies[index].movieID,
+              MovieDescriptionScreen(
+                backdropposter: movies[index].backdropPath,
+                movieID: int.parse(movies[index].movieID!),
+                moviename: movies[index].title,
                 description: movies[index].description,
-                backdropPoster: movies[index].backdropPath,
-                duration: Duration(seconds: movies[index].duration!),
-                posterpath: movies[index].backdropPath,
               ),
             ),
           );
@@ -303,9 +304,64 @@ class _HomeTabState extends State<HomeTab> {
           height: 150,
           width: 130,
           padding: const EdgeInsets.symmetric(horizontal: 5),
-          child: Image.network(
-            movies[index].backdropPath!,
-            fit: BoxFit.cover,
+          child: Stack(
+            children: [
+              Container(
+                height: double.infinity,
+                width: double.infinity,
+                child: Image.network(
+                  movies[index].backdropPath!,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Positioned(
+                bottom: 5,
+                left: 5,
+                child: buildPlayButton(
+                  movieID: movies[index].movieID,
+                  description: movies[index].description,
+                  backdropPoster: movies[index].backdropPath,
+                  duration: Duration(seconds: movies[index].duration!),
+                  posterPath: movies[index].backdropPath,
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  buildPlayButton(
+      {String? movieID,
+      String? description,
+      String? backdropPoster,
+      Duration? duration,
+      String? posterPath}) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.white),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Center(
+        child: IconButton(
+          onPressed: () {
+            Navigator.of(context).push(
+              createRoute(
+                VdoPlaybackView(
+                  movieID: movieID,
+                  description: description,
+                  backdropPoster: backdropPoster!,
+                  duration: duration!,
+                  posterpath: posterPath!,
+                ),
+              ),
+            );
+          },
+          icon: const Icon(
+            Icons.play_arrow,
+            color: Colors.white,
+            size: 20,
           ),
         ),
       ),

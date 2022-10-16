@@ -128,25 +128,28 @@ class _SignupScreenState extends State<SignupScreen> {
 
   void _singup() {
     if (AuthInputsValidation.validateEmail(_emailController!.text, context) ==
-            null ||
+            false ||
         AuthInputsValidation.validatePassword(
                 _passwordController!.text, context) ==
-            null ||
+            false ||
         AuthInputsValidation.validatePassword(
                 _confirmPasswordController!.text, context) ==
-            null) {
+            false) {
       print("Invalid Credentials");
+      print(_emailController!.text);
+      print(_passwordController!.text);
+      print(_confirmPasswordController!.text);
       return;
     }
 
     if (_confirmPasswordController!.text != _passwordController!.text ||
         _nameController!.text.isEmpty) return;
-
+    print(_emailController!.text);
     FirebaseAuthApi().createUserwithEmailAndPassword(
-      _emailController!.text,
-      _passwordController!.text,
-      _nameController!.text,
-      context,
+      email: _emailController!.text,
+      password: _passwordController!.text,
+      name: _nameController!.text,
+      context: context,
     );
   }
 }

@@ -12,10 +12,13 @@ class FirebaseAuthApi {
 
 //Create A User
   Future createUserwithEmailAndPassword(
-      String email, String password, String name, context) async {
+      {String? email, String? password, String? name, context}) async {
     try {
+      print('//////' + email!);
+
       UserCredential userCredential = await _firebaseAuth
-          .createUserWithEmailAndPassword(email: email, password: password);
+          .createUserWithEmailAndPassword(email: email, password: password!);
+      print(email);
       await userCredential.user!.updateDisplayName(name);
 
       //Send Email Verification Link to the User
@@ -25,6 +28,8 @@ class FirebaseAuthApi {
       ///
       print(userCredential.user!.email);
     } on FirebaseAuthException catch (e) {
+      print(e.email);
+      print(e.code);
       CustomAuthExceptions().handleAuthExceptions(e.code, context);
     }
   }

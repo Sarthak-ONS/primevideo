@@ -18,8 +18,10 @@ class CheckForMultiPleLogins {
       final tokenFromDatabase = documentSnapshot.get("loginTokens");
 
       if (tokenFromDatabase.toString() == res.token) {
+        print(true);
         return true;
       } else {
+        print(false);
         return false;
       }
     } catch (e) {

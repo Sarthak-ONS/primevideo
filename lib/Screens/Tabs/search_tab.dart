@@ -11,7 +11,13 @@ class _SearchTabState extends State<SearchTab> {
   @override
   Widget build(BuildContext context) {
     return const Center(
-      child: Text('Search'),
+      child: Text(
+        'Search',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 20,
+        ),
+      ),
     );
   }
 }
